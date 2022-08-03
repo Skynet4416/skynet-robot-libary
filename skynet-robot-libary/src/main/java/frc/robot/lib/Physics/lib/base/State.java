@@ -33,13 +33,18 @@ public class State {
         this.potential_energy = () -> 0.0;
         this.jerk = new Vector(0.0,0.0,0.0);
         this.kinematics_varuibales = new ArrayList<Vector>();
+        kinematics_varuibales.add(position);
+        kinematics_varuibales.add(velocity);
+        kinematics_varuibales.add(acceleration);
+        kinematics_varuibales.add(jerk);
+
     }
     public void save_to_list()
     {
-        this.kinematics_varuibales.add(0, position);
-        this.kinematics_varuibales.add(1, velocity);
-        this.kinematics_varuibales.add(2, acceleration);
-        this.kinematics_varuibales.add(3, jerk);
+        this.kinematics_varuibales.set(0, position);
+        this.kinematics_varuibales.set(1, velocity);
+        this.kinematics_varuibales.set(2, acceleration);
+        this.kinematics_varuibales.set(3, jerk);
 
     }
     public void save_to_var()
@@ -62,5 +67,12 @@ public class State {
         this.energy = state.energy;
         this.potential_energy = state.potential_energy;
         this.jerk = state.jerk;
+        this.kinematics_varuibales = new ArrayList<>(state.kinematics_varuibales);
+
+    }
+    @Override
+    public String toString()
+    {
+        return "position: " + position + "\nvelocity: " + velocity + "\nacceleration: " + acceleration + "\njerk: " + jerk;
     }
 }

@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch Ball",
+      "request": "launch",
+      "mainClass": "frc.robot.lib.Physics.lib.Ball",
+      "projectName": "skynet-robot-libary"
+    },
+    {
+      "type": "java",
       "name": "Launch PhysicalObjectBase",
       "request": "launch",
       "mainClass": "frc.robot.lib.Physics.lib.base.PhysicalObjectBase",

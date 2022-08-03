@@ -23,12 +23,14 @@ public class Vector implements Quantifiable<Double>, Computational<Vector>, Comp
 	private final Double magnitude;
 	private final Angle angle;
 	private final boolean isUnit;
+	public String name;
 
 	public Vector(@NonNull final List<Double> comps) {
 		this.components = Collections.unmodifiableList(new ArrayList<>(comps));
 		this.magnitude = getMagnitude();
 		this.angle = new Angle(getDegree(), AngleUnit.DEGREES);
 		this.isUnit = floatsEqual(this.magnitude, 1.0);
+		name = null;
 	}
 
 
@@ -45,6 +47,7 @@ public class Vector implements Quantifiable<Double>, Computational<Vector>, Comp
 	}
 
 	public Vector(final double magnitude, @NonNull final Angle angle) {
+		name = null;
 		this.angle = angle.simplified();
 		final Angle temp;
 		final double x, y;

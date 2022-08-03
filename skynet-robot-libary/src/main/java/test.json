@@ -1,0 +1,74 @@
+Turn: 1
+Turn: 2
+current vector place 2
+loop
+adding vector place3
+Vector(components=[
+    0.0,
+    0.0,
+    0.0
+], magnitude=0.0, angle=Angle(value=NaN, unit=DEGREES), isUnit=false, name=null) += Vector(components=[
+    0.0,
+    0.0,
+    0.0
+], magnitude=0.0, angle=Angle(value=NaN, unit=DEGREES), isUnit=false, name=null) * 0.2^1/1
+end loop
+Turn: 3
+current vector place 1
+loop
+adding vector place2
+Vector(components=[
+    0.0,
+    18.8082044382,
+    18.8082044382
+], magnitude=26.59881780038828, angle=Angle(value=90.0, unit=DEGREES), isUnit=false, name=null) += Vector(components=[
+    0.0,
+    0.0,
+    0.0
+], magnitude=0.0, angle=Angle(value=NaN, unit=DEGREES), isUnit=false, name=null) * 0.2^1/1
+adding vector place3
+Vector(components=[
+    0.0,
+    18.8082044382,
+    18.8082044382
+], magnitude=26.59881780038828, angle=Angle(value=90.0, unit=DEGREES), isUnit=false, name=null) += Vector(components=[
+    0.0,
+    0.0,
+    0.0
+], magnitude=0.0, angle=Angle(value=NaN, unit=DEGREES), isUnit=false, name=null) * 0.2^2/2
+end loop
+Turn: 4
+current vector place 0
+loop
+adding vector place1
+Vector(components=[
+    0.1,
+    0.1,
+    0.1
+], magnitude=0.17320508075688776, angle=Angle(value=54.735610317245346, unit=DEGREES), isUnit=false, name=null) += Vector(components=[
+    0.0,
+    0.0,
+    0.0
+], magnitude=0.0, angle=Angle(value=NaN, unit=DEGREES), isUnit=false, name=null) * 0.2^1/1
+adding vector place2
+Vector(components=[
+    0.1,
+    0.1,
+    0.1
+], magnitude=0.17320508075688776, angle=Angle(value=54.735610317245346, unit=DEGREES), isUnit=false, name=null) += Vector(components=[
+    0.0,
+    0.0,
+    0.0
+], magnitude=0.0, angle=Angle(value=NaN, unit=DEGREES), isUnit=false, name=null) * 0.2^2/2
+adding vector place3
+Vector(components=[
+    0.1,
+    0.1,
+    0.1
+], magnitude=0.17320508075688776, angle=Angle(value=54.735610317245346, unit=DEGREES), isUnit=false, name=null) += Vector(components=[
+    0.0,
+    18.8082044382,
+    18.8082044382
+], magnitude=26.59881780038828, angle=Angle(value=90.0, unit=DEGREES), isUnit=false, name=null) * 0.2^3/6
+end loop
+Turn: 5
