@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch MotionTester",
+      "request": "launch",
+      "mainClass": "com.github.iprodigy.physics.kinematics.MotionTester",
+      "projectName": "skynet-robot-libary"
+    },
+    {
+      "type": "java",
       "name": "Launch Ball",
       "request": "launch",
       "mainClass": "frc.robot.lib.Physics.lib.Ball",

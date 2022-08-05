@@ -21,11 +21,7 @@ public class SingleFlywheel extends MySubsytemBase{
         this.right_side = right_side;
         this.wheel_radius_meters = wheel_radius_meters;
     }
-    public double get_starting_velocity_for_distance_and_angle_without_friction(double angle, double direct_distance)
-    {
-        return 0;
-        // return 60 * ShootingPhysics.get_starting_velocity_for_distance_and_angle(angle, direct_distance) / (2 * Math.PI*wheel_radius_meters);
-    }
+    
     
 
 

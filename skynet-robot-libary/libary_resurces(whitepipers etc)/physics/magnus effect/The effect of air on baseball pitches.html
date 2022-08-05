@@ -1,0 +1,1733 @@
+
+<!-- saved from url=(0053)http://spiff.rit.edu/richmond/baseball/traj/traj.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="StyleSheet" href="./The effect of air on baseball pitches_files/classes.css" type="text/css"> 
+</head>
+<body data-new-gr-c-s-check-loaded="14.1072.0" data-gr-ext-installed="" cz-shortcut-listen="true">
+<!-- Creative Commons License -->
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/"><img alt="Creative Commons License" border="0" src="./The effect of air on baseball pitches_files/somerights20.gif"></a>
+Copyright © Michael Richmond.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">Creative Commons License</a>.
+<p>
+<!-- /Creative Commons License -->
+<!--
+
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+   <license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.0/" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+   <prohibits rdf:resource="http://web.resource.org/cc/CommercialUse" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+   <requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+</License>
+
+</rdf:RDF>
+
+-->
+
+ 
+</p><h1>
+The effect of air on baseball pitches
+</h1>
+<h4>
+Michael Richmond
+<br>
+August 6, 2008
+<br>
+August 8, 2008
+<br>
+August 18, 2008
+<br>
+April 5, 2009
+<br>
+May 8, 2009
+</h4>
+
+
+<p>
+This document is intended to give a brief, simplified
+view of the forces which act on a baseball as it
+makes its way from the pitcher's hand to home plate.
+I'm aiming for an audience of high-school students,
+so if you are looking for the really technical
+stuff -- like airflow over stitching and the motion
+of knuckleballs -- you'll be disappointed. 
+But if you just want to get a feeling for the relative
+sizes of gravity, drag and the Magnus force, 
+read on!
+
+</p><ul>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#assume"> Ground rules </a> </li>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#vacuum"> Pitching in a vacuum </a> </li>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#drag"> Moving against air resistance </a> </li>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#spin"> Adding spin to the ball </a> </li>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#simple"> Three simple pitches: fastball, change, 
+                           curve </a> </li>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#disguise"> How to "disguise" a pitch </a> </li>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#tilt"> Typical curves are "tilted" </a> </li>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#rightylefty"> The difference between pitches thrown by righties and lefties </a> </li>
+<li> <a href="http://spiff.rit.edu/richmond/baseball/traj/traj.html#info"> For more information </a> </li>
+</ul>
+
+<p>
+</p><hr>
+<p>
+</p><h4>
+<a name="assume"> 
+Ground rules 
+</a>
+</h4>
+
+<p>
+Let's make a few simplifying assumptions at
+the start.
+
+</p><ol>
+<li> Air is uniform in density and temperature.
+            At a temperature of T = 15 C,
+            at sea level,
+            at pressure of 101.325 kPa,
+            its density is <b>1.225 kg/m^3</b>.
+            My code, and the results quoted below,
+            use a value of 1.23 kg/m^3.
+            That's within the range of values one 
+            can find for realistic conditions,
+            but if I were starting again, I might choose 1.225.
+       </li>
+<li> There is no wind </li>
+<li> The baseball is a smooth sphere (no stitches) </li>
+<li> The coefficient of drag is a fixed value,
+         not dependent on speed or spin </li>
+<li> The spin on a pitch doesn't change during
+         its journey from the mound to home plate </li>
+<li> The drag force and the Magnus force can both be
+         represented by simple functions of the 
+         velocity squared of the ball </li>
+</ol>
+
+<p>
+In a real baseball game, some or all of these assumptions
+will be violated; 
+but they will allow us to get a pretty good quantitative
+understanding of the gross properties of
+a curveball, for example.
+
+</p><p>
+I'm going to use a fixed setup for the release point
+of the pitch:
+</p><p>
+<img src="./The effect of air on baseball pitches_files/dimension_a.gif" width="871" height="274" border="3">
+
+
+</p><pre>
+
+</pre>
+
+
+<p>
+<img src="./The effect of air on baseball pitches_files/dimension_b.gif" width="486" height="254">
+<img src="./The effect of air on baseball pitches_files/dimension_f.gif" width="420" height="249">
+
+</p><p>
+The figure above shows the release point
+for a right-handed pitcher.
+Left-handed pitchers will release the ball exactly 2 feet
+to the first-base side of the mound.
+I chose this location for the release point
+after looking at the measurements for several
+pitchers on the
+<a href="http://fastballs.wordpress.com/2008/01/14/mvn-a-pitchfx-primer/">
+PITCH f/x system.</a>
+
+</p><p>
+I'll adopt a coordinate system which may seem a bit
+peculiar.
+It's oriented like so:
+</p><p>
+<img src="./The effect of air on baseball pitches_files/dimension_c.gif" width="827" height="299">
+
+</p><p>
+Why choose the <b>+z</b> axis to run towards
+third base instead of first?
+Well, this way, the coordinate system is
+what physicists called "right-handed", 
+and that means that we can use very common
+mathematical conventions 
+when we compute the direction of the
+Magnus force.
+
+</p><p>
+I'll also adopt the following values for the
+properties of a baseball and air.
+
+</p><p>
+</p><pre><font size="+1">
+
+Baseball
+   Mass    m   =   0.145  kg
+
+   Radius  R   =   3.683  cm  =  1.45   inch
+
+Air
+   Density <b>&#961;</b>   =   1.23   kg / m<sup>3</sup>
+
+</font></pre>
+
+
+<p>
+</p><hr>
+<p>
+</p><h4>
+<a name="vacuum"> 
+Pitching in a vacuum
+</a>
+</h4>
+
+<p>
+To begin, let's remove all the air from 
+a baseball stadium
+(and hope that the players have pressure suits).
+In a vacuum, there will be only one force
+acting on the baseball after it leaves
+the pitcher's hand:
+<b>gravity</b>.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/force_grav_only.gif" width="864" height="644">
+
+</p><p>
+We can express the gravitional force on
+the ball as
+
+</p><p>
+</p><center> <img src="./The effect of air on baseball pitches_files/eqn_grav.gif" width="371" height="152"> </center>
+
+<p>
+where 
+<b>m</b> is the mass of the baseball,
+<b>g</b> is the gravitational acceleration at the Earth's surface
+(9.8 meters per second per second),
+and
+the <b>j-hat</b> symbol means "in the direction of the y-axis".
+Since gravity pulls objects down,
+this force is always in the negative y-direction.
+
+</p><p>
+</p><pre><font size="+2">
+
+  Q:  What is the size and direction
+      of the gravitational force on a baseball?
+
+
+</font></pre>
+
+<p>
+<font size="-1">
+<a href="http://spiff.rit.edu/richmond/baseball/traj/answer_1.txt">
+ The answer 
+</a>
+</font>
+
+</p><p>
+When there's only a single force acting on the ball,
+and that force is constant in size and direction,
+the motion is particularly simple.
+The ball will follow a
+<b>parabolic trajectory.</b>
+It's not too hard to derive two simple
+equations which will yield the position of the
+ball as a function of time.
+If the ball has some initial position
+<b>x<sub>0</sub>, y<sub>0</sub></b>
+and initial velocity
+<b>V<sub>0</sub></b>
+oriented at an angle 
+<b>&#952;</b> above the horizontal,
+then its position at any time <b>t</b>
+is given by
+
+</p><p>
+</p><center>
+<img src="./The effect of air on baseball pitches_files/eqn_ballistic.gif" width="609" height="191">
+</center>
+
+<p>
+Let's consider a relatively standard pitch:
+a fastball thrown at 90 miles per hour (mph);
+to be precise, thrown so that it is travelling
+at 90 mph as it leaves the pitcher's hand.
+The center of the strike zone should be over the 
+middle of the plate and about
+33 inches or 2.77 feet
+above the ground
+(it depends on the height of the batter, of course).
+Here's the trajectory of a fastball
+which ends up in the center of the strike zone,
+as seen from the third-base side of the field.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_a.gif" width="720" height="504">
+
+</p><p>
+You can count the dots above to see that the
+ball arrives at the plate about 0.41 seconds
+after it leaves the pitcher's hand.
+
+</p><p>
+In this situation,
+the pitcher must give the ball an initial angle of
+<b>1.16 degrees below horizontal</b>.
+When it reaches the plate, the ball will
+moving a bit FASTER than it was when the
+pitcher released it:
+it retains all the initial horizontal speed (89.9 mph),
+and it gains a bit of speed as it falls 
+(ending at 10.8 mph downwards).
+So the final speed is about 90.6 mph.
+
+</p><p>
+Of course, in real life, balls will slow down
+as they move through the air.
+Let's see how to handle drag forces next.
+
+
+
+</p><p>
+</p><hr>
+<p>
+</p><h4>
+<a name="drag"> 
+Moving against air resistance
+</a>
+</h4>
+
+<p>
+As the ball moves through the air,
+it has to push the air out of its way.
+The air, in return, pushes the ball back,
+in the opposite direction.
+Therefore, the direction of the drag force will always
+point opposite to the instantaneous velocity.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/force_grav_drag.gif" width="864" height="644">
+
+</p><p>
+The size of the drag force is a bit complicated:
+it depends on the ball's speed.
+For the relatively narrow range of speeds
+of interest for pitching --
+say, 60 mph to 100 mph -- 
+the drag force is roughly dependent on
+the SQUARE of the ball's speed.
+We can write this approximation as
+
+</p><p>
+</p><center><img src="./The effect of air on baseball pitches_files/eqn_drag.gif" width="484" height="116"> </center>
+
+&lt;&gt;
+where
+<pre><font size="+1">
+
+    C<sub>D</sub>  =   drag coefficient            =  0.40
+
+    <b>&#961;</b>   =   density of air              =  1.23     kg/m<sup>3</sup> 
+
+    A   =   cross section area of ball  =  0.00426  m<sup>2</sup>
+
+    v   =   velocity of ball  (m/s)
+
+</font></pre>
+
+<p>
+and the expression
+<img src="./The effect of air on baseball pitches_files/eqn_drag_a.gif" width="65" height="112" align="center">
+is a mathematical way of 
+writing
+"in the direction of the velocity".
+
+
+</p><p>
+I'm adopting the 
+value <b>C<sub>D</sub> = 0.40</b> 
+based on results presented in 
+<a href="http://webusers.npl.uiuc.edu/~a-nathan/pob/LiftDrag-1.pdf">
+  Determining the Drag Coefficient from PITCHf/x Data </a>
+by Alan Nathan and Ike Hall.
+
+</p><p>
+</p><pre><font size="+2">
+
+  Q:  What is the size and direction
+      of the drag force on a baseball
+      which is travelling horizontally
+      towards home plate at 90 mph?
+
+
+  Q:  Which is larger in size, the drag
+      force or the gravitational force?
+
+
+</font></pre>
+
+<p>
+<font size="-1">
+<a href="http://spiff.rit.edu/richmond/baseball/traj/answer_2.txt">
+ The answers
+</a>
+</font>
+
+
+</p><p>
+Since both the magnitude and the direction of the drag force
+change as the ball moves towards home plate,
+computing its effect on the trajectory takes a lot more 
+work than accounting for the effect of gravity.
+There is no simple set of equations which yield the
+position as a function of time, alas.
+However, one can still integrate the motion of
+the ball numerically.  
+Let's do that, and compare the motion of a 90 mph
+fastball in a vacuum to the same pitch travelling 
+through air.
+I'll give each ball exactly the same speed and
+direction as it leaves the pitcher's hand.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_b.gif" width="720" height="504">
+
+</p><p>
+There are two main differences due to the drag force:
+</p><ol>
+<li> The ball takes a bit longer to reach the plate.
+      As you can see from the diagram, the ball moving
+      through air takes an extra 3 dots = 0.03 seconds
+      to reach home plate.
+   </li>
+<li> The ball falls a little farther during its 
+      journey, simply because it takes that extra time
+      to reach home plate.
+      The difference in height is about
+      7.6 cm = 3.0 inches.
+  </li>
+</ol>
+
+<p>
+By the time it reaches the plate, the fastball in air isn't moving
+90 mph any more.  Its horizontal speed is about 80 mph,
+so 
+<b>a 90 mph fastball loses about 10 mph due to air resistance</b>
+by the time it reaches the batter.
+This loss of speed is larger for pitches which start out
+faster -- after all, the drag force does grow 
+with the square of the speed.
+
+</p><p>
+</p><pre><font size="+1">
+
+initial horizontal speed     final horizontal speed      loss
+----------------------------------------------------------------------
+  100 mph                          88 mph                12 mph
+   90 mph                          80 mph                10 mph
+   80 mph                          71 mph                 9 mph
+   67 mph                          59 mph                 8 mph
+----------------------------------------------------------------------
+</font></pre>
+
+
+<p>
+Clearly, the drag force has a big effect on a baseball;
+losing about 10 percent of the initial speed is a
+big deal.
+On the other hand, the effect of the drag force
+is always the same: to delay the ball's arrival
+at the plate and cause it to drop a bit.
+There's nothing a pitcher can do to alter this 
+behavior, which means that he can't do much to fool
+a good hitter.
+If only there were some way for the pitcher
+to alter the ball's motion in an unpredictable way ....
+
+
+</p><p>
+</p><hr>
+<p>
+</p><h4>
+<a name="spin"> 
+Adding spin to the ball
+</a>
+</h4>
+
+<p>
+A spinning object moving through the air will experience
+an additional force,
+due to the the interaction of its
+surface and the air:
+one portion of it will be rotating WITH the air,
+while another portion will be rotating AGAINST the air.
+There are several ways to characterize this
+interaction, and the resulting force.
+For our purposes, I'll refer to it as the
+<b>Magnus force</b>,
+and adopt a relatively simple equation to quantify its effect:
+
+</p><p>
+</p><center> <img src="./The effect of air on baseball pitches_files/eqn_magnus.gif" width="472" height="127"> </center>
+
+<p>
+where
+</p><pre><font size="+1">
+
+    C<sub>L</sub>  =   lift coefficient            (see below)
+
+    <b>&#961;</b>   =   density of air              =  1.23     kg/m<sup>3</sup> 
+
+    A   =   cross section area of ball  =  0.00426  m<sup>2</sup>
+
+    v   =   velocity of ball  (m/s)
+
+</font></pre>
+
+<p>
+Let's wait for a moment to discuss the 
+lift coefficient <b>C<sub>L</sub></b>,
+and ask instead, "In which direction does the
+Magnus force push the baseball?"
+The last section of the equation above provides the
+answer, if you know how to read vector notation:
+<img src="./The effect of air on baseball pitches_files/eqn_magnus_a.gif" width="124" height="44" align="center">
+means that
+the direction of the Magnus force is
+perpendicular to both
+the ball's axis of rotation 
+<img src="./The effect of air on baseball pitches_files/eqn_omega_hat.gif" width="39" height="40" align="center">
+and the ball's velocity
+<img src="./The effect of air on baseball pitches_files/eqn_vel_hat.gif" width="42" height="38" align="center">.
+
+</p><p>
+It will be easier to understand with a picture,
+which like all the others so far is taken
+from the third-base dugout, looking towards the pitcher's mound.
+I'll give the ball pure backspin, so that the rotation
+axis is horizontal.
+</p><p>
+<img src="./The effect of air on baseball pitches_files/force_grav_drag_magnus.gif" width="864" height="644">
+
+</p><p>
+With pure backspin, the rotation axis must be horizontal ... but
+should the direction of 
+<img src="./The effect of air on baseball pitches_files/eqn_omega_hat.gif" width="39" height="40" align="center">
+point towards first base, or towards third base?
+The rule is that, if you hold your right hand on the axis
+and wrap your fingers around it in the direction of rotation,
+your outstretched thumb points in the direction of the 
+vector describing the rotation.
+In this case, if we wrap the fingers of a right hand
+around the ball in the figure above to match the ball's rotation,
+that right hand's thumb will point towards third base.
+
+</p><p>
+Phew.
+
+</p><p>
+Once we have the directions of 
+<img src="./The effect of air on baseball pitches_files/eqn_omega_hat.gif" width="39" height="40" align="center">
+and 
+<img src="./The effect of air on baseball pitches_files/eqn_vel_hat.gif" width="42" height="38" align="center">,
+we can use the standard mathematical cross product
+to determine the direction of the Magnus force.
+</p><blockquote><font size="-1">
+  Perhaps you'd like to read 
+   <a href="http://spiff.rit.edu/classes/phys312/workshops/w2c/angmom/vec_torque.html">
+       a brief review of the vector cross product? </a>
+</font></blockquote>
+The rule again involves one's right hand:
+point your outstretched fingers so that they point along the direction
+of the first vector,
+<img src="./The effect of air on baseball pitches_files/eqn_omega_hat.gif" width="39" height="40" align="center">,
+then orient your hand so that when you curl your fingers
+to make a fist, the finger move towards the second vector,
+<img src="./The effect of air on baseball pitches_files/eqn_vel_hat.gif" width="42" height="38" align="center">.
+Now stretch your thumb outwards, and it will point in the
+direction of the cross product.
+In this case, 
+that turns out to be mostly <b>upwards</b>.
+
+
+<p>
+Let me repeat that:
+when a pitcher throws a ball with pure backspin,
+the ball is pushed <b>upwards</b> as it moves
+through the air.
+How large is this Magnus force?
+In order to calculate its size, we need to know the
+value of the <b>lift coefficient C<sub>L</sub></b>.
+Unfortunately,
+unlike the drag coefficient, 
+the lift coefficient varies quite a bit 
+in ordinary baseball circumstances.
+In particular, it depends on the ratio
+of the rotational speed <b>V<sub>r</sub></b>
+to the translational speed <b>V<sub>t</sub></b>.
+
+</p><p>
+</p><center>
+<img src="./The effect of air on baseball pitches_files/rot_vs_trans.gif" width="809" height="384">
+</center>
+
+<p>
+Physicists use the symbol <b>S</b>, for "spin factor",
+to describe the ratio of the rotational motion
+of a ball to its translational motion.
+
+</p><p>
+</p><center><img src="./The effect of air on baseball pitches_files/eqn_s_param.gif" width="392" height="132"> </center>
+
+<p>
+Recall that the radius of a baseball is <b>R = 1.45 inch = 3.683 cm</b>.
+What is the rotational speed 
+<font size="+1"><b>&#969;</b></font>
+for a baseball?
+Well, I used 
+<a href="http://fastballs.wordpress.com/2007/09/12/mad-dog-mishmash/">
+   an article with PITCH f/x measurements for Greg Maddux </a>
+to pick some representative values.
+
+</p><pre><font size="+1">
+ Pitch type     spin direction   <font size="+1"><b>&#969;</b></font> (RPM)      <font size="+1"><b>&#969;</b></font> (rad/s)        v<sub>r</sub>
+----------------------------------------------------------------------------
+  fastball        backspin        2200
+
+  changeup        backspin        1300
+
+  curve           topspin         1300
+----------------------------------------------------------------------------
+</font></pre>
+
+<p>
+</p><pre><font size="+2">
+
+   Q:  Can you fill in the final two columns
+       of the table above?
+
+</font></pre>
+
+<p>
+<font size="-1">
+<a href="http://spiff.rit.edu/richmond/baseball/traj/answer_3.txt">
+ The answers
+</a>
+</font>
+
+</p><p>
+Now, finding the rotational speed is only the half the battle.
+We also need the translational speed of each pitch.
+I've chosen some round numbers which are easy to remember
+in the table below.  
+
+</p><pre><font size="+1">
+                                   v<sub>r</sub>          v<sub>t</sub>
+ Pitch type     spin direction    (mph)       (mph)          S
+----------------------------------------------------------------------------
+  fastball        backspin                     90                
+
+  changeup        backspin                     80                 
+
+  curve           topspin                      80                
+----------------------------------------------------------------------------
+</font></pre>
+
+
+<p>
+</p><pre><font size="+2">
+
+   Q:  Can you fill in the missing two 
+       columns of the table above?
+
+</font></pre>
+
+<p>
+<font size="-1">
+<a href="http://spiff.rit.edu/richmond/baseball/traj/answer_4.txt">
+ The answers
+</a>
+</font>
+
+
+</p><p>
+If we know the spin parameter <b>S</b> for a 
+particular pitch, 
+then we can figure out the lift coefficient
+<b>C<sub>L</sub></b>.
+Alan Nathan's article
+<a href="http://webusers.npl.uiuc.edu/~a-nathan/pob/AJPFeb08.pdf">
+The Effect of Spin on the Flight of a Baseball </a>
+presents the results of a set of measurements
+of baseballs thrown by a pitching machine
+past the view of high-speed cameras.
+Below is Figure 5 from his article:
+
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/nathan_fig5.gif" width="887" height="605">
+<br>
+<font size="-1"> Image courtesy of 
+<a href="http://webusers.npl.uiuc.edu/~a-nathan/pob/">Alan Nathan</a>
+ and 
+<a href="http://www.kzoo.edu/ajp/">
+ the American Journal of Physics </a>
+</font>
+
+</p><p>
+As you can see, the lift coefficient <b>C<sub>L</sub></b>
+increases as
+the spin parameter <b>S</b> increases ---
+but not in lockstep.
+In my computations, I fit this relationship with
+three linear segments;
+but for rough purposes, 
+one might make the simple assumption
+that, over the range of spin values
+of ordinary pitches (0.10 &lt; <b>S</b> &lt; 0.25),
+the lift coefficient is approximately 
+constant at 
+<b>C<sub>L</sub></b> = 0.22.
+
+</p><p>
+That was a lot of work, but we are now ready 
+to figure out exactly what the Magnus force
+will do to some real baseballs.
+
+
+
+</p><p>
+</p><hr>
+<p>
+</p><h4>
+<a name="simple"> 
+Three simple pitches: fastball, change, curve
+</a>
+</h4>
+
+<p>
+Now that we know how to deal with the Magnus force,
+we can apply it to real situations.
+Let's consider three pitches -- and rather 
+simplified types of each.
+
+</p><p>
+</p><ul>
+<li> 90 mph fastball with pure backspin, sort of like a 4-seam fastball </li>
+<li> 80 mph changeup with pure backspin </li>
+<li> 80 mph curveball with pure topspin, so it has a "12-to-6" break </li>
+</ul>
+
+<p>
+Remember this equation for the Magnus force on a spinning ball?
+
+
+</p><p>
+</p><center> <img src="./The effect of air on baseball pitches_files/eqn_magnus.gif" width="472" height="127"> </center>
+
+<p>
+where
+</p><pre><font size="+1">
+
+    C<sub>L</sub>  =   lift coefficient            =  0.22     (approximately)
+
+    <b>&#961;</b>   =   density of air              =  1.23     kg/m<sup>3</sup> 
+
+    A   =   cross section area of ball  =  0.00426  m<sup>2</sup>
+
+    v   =   velocity of ball  (m/s)
+
+</font></pre>
+
+<p>
+We can now compute the size and direction 
+of the Magnus force for each pitch.
+Let's start with the fastball.
+
+</p><p>
+</p><pre><font size="+1">
+                                   v_t      v_t         Magnus force
+ Pitch type     spin direction    (mph)    (m/s)    size (N)     direction
+----------------------------------------------------------------------------
+  fastball        backspin        90.0     40.2       0.93       mostly up
+----------------------------------------------------------------------------
+
+</font></pre>
+
+<p>
+Look at that!  The size of the Magnus force is similar
+to the size of the other two forces on the ball:
+
+</p><ul>
+<li> gravity: 1.4 Newtons (down) </li>
+<li> drag: 1.7 Newtons (mostly towards the mound) </li>
+<li> Magnus: 0.9 Newtons (mostly up) </li>
+</ul>
+
+<p>
+We can't ignore any of these forces; in order to determine
+the trajectory of a pitch accurately, 
+one MUST include all three.
+
+</p><p>
+So, I wrote some code to integrate the effect of all three
+forces numerically
+as the ball travels from the pitcher's hand to home plate.
+Let's start by comparing the motion of a
+"dead" fastball -- one which doesn't spin at all,
+and so feels no Magnus force, only gravity and the drag force --
+to a "live" fastball -- one with a realistic
+amount of backspin.
+Both balls start with the same speed,
+90 mph.
+Both balls are given the same initial direction, 
+too, 
+which is chosen so that the "dead" fastball
+ends up exactly in the middle of the strike zone.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_d.gif" width="720" height="504">
+
+</p><p>
+Holy mackerel!  
+The backspin on a real fastball has a
+MAJOR effect on its trajectory.
+The spinning ball ends up about 2 feet higher
+than the "dead" ball when it crosses home plate.
+
+</p><p>
+The lift given by the Magnus force to a ball with backspin
+is responsible for the phrase
+"a rising fastball."
+
+<!--
+Recall that the size of the Magnus force does depend on
+speed of the ball
+(in fact, on the speed squared),
+<P>
+<centeR> <img src="./magnus_force_b.gif" width=418 height=93> </centeR>
+
+<P>
+so the faster the pitch, the larger the Magnus force
+and the less it falls as it travels to the plate.
+A batter who is prepared for a 90 mph fastball
+will misjudge a 100 mph fastball 
+and swing underneath it, 
+even if he manages to time the swing correctly.
+-->
+However, the fastball doesn't REALLY rise;
+it just falls less than it would if it weren't spinning.
+In order to make a pitch really rise,
+one would have to be superhuman:
+below is the trajectory of a pitch with
+</p><ul>
+<li> initial speed 110 mph </li>
+<li> 3500 RPM of pure backspin </li>
+<li> purely horizontal motion at time of release </li>
+</ul>
+
+<p>
+<img src="./The effect of air on baseball pitches_files/traj_j.gif" width="720" height="504">
+
+</p><p>
+Of course, if one were throwing a ball with
+the same size as a baseball but less mass,
+then
+</p><ul>
+<li> the gravitational force would be smaller, but ... </li>
+<li> the Magnus force (and drag force) would be the same </li>
+</ul>
+
+<p>
+In that case, one might be able to throw 
+a ball so that it rises quite a bit on its way
+to the plate.
+You can click on the picture below to see some examples
+from a Wiffle Ball tournament;
+I suggest starting at 2:14 from the beginning of the clip.
+
+</p><p>
+<a href="http://www.youtube.com/watch?v=GMk-ZXEhpOE&amp;feature=related">
+<img src="./The effect of air on baseball pitches_files/wiffle_still.gif" width="493" height="421">
+</a>
+
+</p><p>
+</p><blockquote><font size="-1">
+  Yes, yes, a whiffle ball has holes on just one side,
+  which causes all sorts of extra aerodynamic effects.
+</font></blockquote>
+
+<pre>
+
+
+
+
+</pre>
+
+
+<p>
+Let's turn to a second pitch: the changeup.
+This is very similar to the fastball,
+with just two differences:
+</p><ul>
+<li> the changeup is thrown more slowly, 80 mph instead of 90 mph </li>
+<li> the changeup is thrown with less backspin, 1300 RPM instead of 
+             2200 RPM </li>
+</ul>
+
+<p>
+</p><pre><font size="+1">
+                                   v_t      v_t         Magnus force
+ Pitch type     spin direction    (mph)    (m/s)    size (N)     direction
+----------------------------------------------------------------------------
+  changeup        backspin        80.0     35.8       0.74       mostly up
+----------------------------------------------------------------------------
+
+</font></pre>
+
+
+<p>
+The result is a pitch which has considerably less
+lift than a fastball, so it falls more before it reaches
+the plate.  
+It also takes a bit more time to reach the plate, too.
+For example, suppose that a pitcher throws an ordinary
+fastball right through the middle of the strike zone
+on the first pitch,
+then switches to the changeup with exactly the same
+release point and initial direction.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_e.gif" width="720" height="504">
+
+</p><p>
+Note how similar the two pitches 
+appear when first released.
+The second pitch takes an extra 0.06 seconds
+to cross home plate, which can cause a batter
+to swing too early.
+It also ends up about 12 inches below the 
+center of the strike zone.
+
+</p><p>
+</p><pre><font size="+2">
+
+  Q:  How does this extra drop of 12 inches
+      compare to the diameter of a baseball?
+
+
+</font></pre>
+
+<p>
+<font size="-1">
+<a href="http://spiff.rit.edu/richmond/baseball/traj/answer_5.txt"> The answer </a> </font>
+
+</p><p>
+</p><pre>
+
+
+
+</pre>
+
+
+
+<p>
+Finally, let's consider a particular type of curveball:
+one thrown with pure topspin.
+Most real curveballs have a considerable amount of
+sidespin as well, 
+but let's leave that complication for later.
+Our simple curve will 
+</p><ul>
+<li> be thrown at 80 mph </li>
+<li> have 1300 RPM of <b>topspin</b> </li>
+</ul>
+
+<p>
+</p><pre><font size="+1">
+                                   v_t      v_t         Magnus force
+ Pitch type     spin direction    (mph)    (m/s)    size (N)     direction
+----------------------------------------------------------------------------
+  curve           topspin         80.0     35.8       0.74       mostly down
+----------------------------------------------------------------------------
+
+</font></pre>
+
+
+<p>
+Topspin means that the axis of rotation points 
+towards the first-base side of the field.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/curveball_spin.gif" width="864" height="644">
+
+</p><p>
+If we perform the cross product of 
+<img src="./The effect of air on baseball pitches_files/eqn_omega_hat.gif" width="39" height="40" align="center">
+and 
+<img src="./The effect of air on baseball pitches_files/eqn_vel_hat.gif" width="42" height="38" align="center">
+now,
+we'll find that the result points <b>mostly downwards</b>.
+With two forces pushing them downwards,
+curveballs drop very rapidly.
+In fact, if one throws a curveball with
+exactly the same initial direction as a fastball,
+it won't even reach the plate!
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_f.gif" width="720" height="504">
+
+</p><p>
+If you want a curveball to end up in the middle
+of the strike zone, you need to give it an 
+initial velocity which is slightly ABOVE
+the horizontal:
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_g.gif" width="720" height="504">
+
+
+
+
+</p><p>
+</p><hr>
+<p>
+</p><h4>
+<a name="disguise">
+How to "disguise" a pitch
+</a>
+</h4>
+
+<p>
+If you look at the last figure just above, you'll see
+that the trajectory of a curveball which ends up in the
+middle of the strike zone is very different from that
+of a fastball which ends up in the middle of the strike 
+zone.  
+The curveball flies upwards briefly, then gradually
+descends.
+When it is halfway from pitcher to batter, the 
+curveball is about 14 inches higher than the fastball.
+A hitter would notice that easily.
+He might not be able to hit the ball, of course,
+but he might at least be able to alter the timing
+of his swing.
+
+</p><p>
+Suppose that a pitcher wants to keep the batter
+guessing, even after the ball has left his hand.
+Is there a way to "disguise" a curveball, so that
+it doesn't stand out from the other pitches?
+Sure -- all the pitcher has to do is alter the initial
+direction of the pitch a bit.
+
+</p><p>
+Robert Adair, in his book
+<a href="http://www.amazon.com/Physics-Baseball-Robert-Kemp-Adair/dp/0060084367">
+  The Physics of Baseball, </a>
+estimates that hitters must start reacting 
+to a pitch about 0.23 seconds
+before it reaches the plate;
+in other words, they need to make the decision
+"swing or don't swing" when the ball
+is roughly halfway to the plate.
+Let's see what this implies for the
+recognition of pitches.
+
+</p><p>
+I'll make a slight modification to Adair's value
+and assume that the batter starts to react
+exactly 0.23 seconds after the ball is released;
+that gives another 0.22 seconds for the ball to 
+reach the plate, if it's a fastball, so it's 
+saying pretty much the same thing.
+With a little extra practice time and a high-speed video
+camera, a pitcher could figure out how
+to throw the three basic pitches so that
+each one is at exactly the same height at this
+critical time.
+I'll mark that height -- 4.7 feet -- with a 
+black line in the diagram below.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_h.gif" width="720" height="504">
+
+</p><p>
+The fastball ends up in the middle of the strike zone,
+reaching home plate 0.22 seconds after the batter 
+starts to react.
+The changeup crosses the plate 0.27 seconds
+after the batter reacts,
+about one foot lower than the fastball.
+The curve bounces in the dirt before it
+reaches the plate.
+
+</p><p>
+We can also look at these three pitches from the 
+batter's point of view.  
+In the figure below, dots mark the position
+of each pitch in angle: the vertical scale is
+"degrees above horizontal" -- so positive numbers
+means the batter has to look up --
+and the horizontal scale is 
+"degrees away from the mound-plate line" --
+so that positive numbers means the batter is
+looking towards the first-base side of the mound.
+The release point is at upper-left in this diagram.
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_h2.gif" width="720" height="504">
+
+</p><p>
+As you can see, when the batter has to decide 
+"Swing, or no swing?", 
+the difference in angular position 
+between the three pitches
+is less than two degrees.
+
+
+
+
+
+</p><p>
+"But wait," you might object,
+"this isn't a perfect disguise.
+The batter can use his depth perception to notice
+that these three pitches aren't all at the same
+distance when they pass through that height of
+4.7 feet."
+Yes, you are correct.
+But with a little more practice and video analysis,
+the pitcher can adjust his release so that 
+each one of the pitches passes through
+exactly the same point in space:
+4.7 feet above the ground and about 25.7 feet
+away from home plate.
+As the figure below shows, the curveball and
+change do take a little bit longer
+to reach this point.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_i.gif" width="720" height="504">
+
+</p><p>
+Now the changeup is about 6 inches below the 
+fastball when it crosses the plate --
+still enough to cause the bat to miss the
+ball completely.
+The curveball does manage to reach the plate
+in the air, though it's just a few inches
+off the ground.
+
+</p><p>
+Looking at these pitches from the
+batter's point of view again,
+the difference between them is even
+smaller than it was before.
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_i2.gif" width="720" height="504">
+
+
+
+
+
+</p><p>
+</p><hr>
+<p>
+</p><h4>
+<a name="tilt">
+Typical curves are "tilted"
+</a>
+</h4>
+
+<p>
+All the pitches described so far have spins which are 
+very simple to describe:
+pure backspin (fastball and changeup) 
+or pure topspin (curve).
+While these are decent approximations,
+they don't resemble real pitches in one respect:
+they don't allow for any <b>horizontal break</b>.
+
+</p><p>
+Why not?  Well, think about the forces on the ball:
+</p><ul>
+<li> gravity always pulls straight down </li>
+<li> the drag force pushes opposite to the current velocity,
+         and (for the most part) that is either straight towards
+         home plate or down </li>
+<li> the Magnus force depends on the cross product of
+         the spin vector and the velocity vector; for
+         pure backspin or topspin, the result is
+         a purely vertical force  </li>
+</ul>
+
+<p>
+But it IS possible to make a ball curve horizontally.
+All we need to do is to tilt the spin axis a bit.
+It will help if we look at a new sort of diagram,
+one which shows the ball from center field,
+looking in towards home plate, just after the ball
+leaves the pitcher's hand.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/twelve_curve.gif" width="864" height="644">
+
+</p><p>
+I've drawn a clock face around the ball as a guide
+for describing the direction of spin.
+This curve ball has pure topspin,
+so that the portion of the ball which is rotating
+fastest towards home plate is closest to 
+the "12" on the clock face. 
+We could call this a "twelve o'clock curveball"
+if we wanted.
+The Magnus force on this ball will be straight down;
+you might hear the broadcaster describe this 
+as a "twelve-to-six curveball."
+
+</p><p>
+But if the pitcher tilts his hand by about 30 degrees
+as he releases it, we would see a somewhat different
+spin orientation:
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/one_curve.gif" width="864" height="644">
+
+</p><p>
+We could call this a "one o'clock curveball" 
+because the portion of the ball which spins forward
+most quickly is now next to the "1 o'clock" position
+in the diagram.
+
+</p><p>
+The spin direction 
+<img src="./The effect of air on baseball pitches_files/eqn_omega_hat.gif" width="39" height="40" align="center">
+is no longer horizontal,
+but points 
+</p><ul>
+<li> towards the first-base side of the field (as before) </li>
+<li> 30 degrees above the horizontal </li>
+</ul>
+
+<p>
+That means that the direction of the Magnus force changes,
+too.
+Using the right-hand rule, one can compute the new direction,
+given by 
+
+</p><p>
+</p><center><img src="./The effect of air on baseball pitches_files/eqn_magnus_a.gif" width="124" height="44"> </center>
+
+<p>
+</p><pre><font size="+2">
+
+  Q:  Can you figure out which way the Magnus
+      force pushes this curveball?
+
+      Will it break towards a right-handed
+      batter, or away from him?
+
+</font></pre>
+
+<p>
+<font size="-1">
+<a href="http://spiff.rit.edu/richmond/baseball/traj/answer_6.txt"> The answers </a>
+</font>
+
+</p><p>
+I'll compute the trajectories of
+two curve balls:
+
+</p><ul>
+<li> a twelve o'clock curve which ends up in the 
+          middle of the strike zone </li>
+<li> a one o'clock curve which is given exactly
+          the same initial velocity </li>
+</ul>
+
+<p>
+If we look at these two curves from the side,
+they don't appear greatly different.
+Because only a portion of the Magnus force
+pushes the one o'clock curve down, it doesn't
+fall quite as far as the twelve o'clock curve;
+but the difference is only about 3 inches.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_k.gif" width="720" height="504">
+
+</p><p>
+However, if we look at these pitches
+from the catcher's point of view,
+we see that the horizontal component
+of the Magnus force does make quite a difference:
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_l.gif" width="720" height="504">
+
+</p><p>
+The horizontal break on the one o'clock curve
+pushes it out to the very edge of the strike zone,
+about 11 inches from the center of the plate.
+I've drawn a strike zone which is
+based on the width of home plate (8.5 inches
+to each side of the center),
+plus an additional width of one ball diameter
+on each side (another 2.9 inches)
+
+</p><p>
+From the pitcher's point of view, this ball breaks
+from upper-right to lower-left as it approaches
+the batter. 
+The pitcher might reasonably describe this as 
+"a one o'clock to seven o'clock curveball".
+
+</p><p>
+Don't forget that a typical pitcher will release the 
+ball about two feet to the side of the mound;
+I've drawn the flight of a ball thrown by 
+a right-handed pitcher in the figure above.
+
+
+
+
+</p><p>
+</p><hr>
+<p>
+</p><h4>
+<a name="rightylefty">
+The difference between pitches thrown by righties and lefties
+</a>
+</h4>
+
+<p>
+When managers make up their lineups for each game,
+they pay quite a bit of attention to the 
+opposing pitcher.  In general, if the opposing pitcher
+throws with his left hand, the manager will try to
+fill his lineup with batters who stand in the
+box on the third-base side of home plate
+(right-handed hitters);
+if the opposing pitcher throws with his
+right hand, the manager will insert batters
+who stand on the first-base side of home plate
+(left-handed batters).  Why?
+
+</p><p>
+The answer has two parts.
+
+</p><ul>
+<li> The "typical" breaking ball thrown by a pitcher
+          will move <i>horizontally</i>
+          in one particular direction;
+          that direction depends on which hand
+          throws the ball. </li>
+<li> The "typical" batter has an easier
+          time hitting pitches which are
+          located on one particular side
+          of the plate. </li>
+</ul>
+
+<p>
+Let's look at the pitching half of this story.
+
+</p><p>
+Recall from the previous section that if a pitcher throws a
+curveball by giving the ball topspin, and holds the ball so
+that the top of the rotation is at one o'clock
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/one_curve.gif" width="864" height="644">
+
+</p><p>
+then, compared to a ball thrown with no sidespin,
+this ball will slide towards the first-base side
+of home plate:
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/traj_l.gif" width="720" height="504">
+
+</p><p>
+So, just how easy is it for a pitcher to hold and
+release the ball so that the top of the spin 
+is located at one o'clock?
+Let's look at a right-handed pitcher as he 
+is about to release the ball,
+in a view taken by the center-field camera.
+
+
+</p><p>
+The pitcher's hand holds the third-base side of the 
+ball.  If his arm angle at the release were vertical,
+directly over his head, then when he snapped his 
+wrist forward, he would give the ball pure topspin.
+Most pitchers, like the one shown above, have
+more of a "three-quarters" arm angle: they hold 
+their arms both up and towards the side.  
+In this situation, the pitcher holds the ball
+so that it is cupped slightly from below,
+as well as being held from the third-base side.
+At a right-handed pitcher snaps his wrist forward,
+he gives the ball both topspin and some sidespin:
+the top of the spinning motion is tilted to the
+third-base side.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/righty_throws.gif" width="650" height="643">
+
+</p><p>
+Thus, when a right-handed pitcher throws a curveball,
+the top of the spinning ball will be tilted
+towards the one o'clock side.
+As a result, his curveball will both
+</p><ul>
+<li> curve down relative to a ball thrown with no spin </li>
+<li> break towards first base, relative to a ball thrown with no spin </li>
+</ul>
+
+<p>
+On the other hand, when a right-handed pitcher throws
+a fastball, his grip is different:
+he lets the ball roll off his fingers as
+he pushes it forward.
+That gives the ball backspin, again with 
+a tilt in the same direction.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/righty_fastball.gif" width="734" height="643" <p="">
+So when a right-handed pitcher throws a fastball,
+the top of the back-spinning ball will be tilted
+towards the one o'clock side.
+As a result, his fastball will both
+</p><ul>
+<li> stay up relative to a ball thrown with no spin </li>
+<li> break towards third base, relative to a ball thrown with no spin </li>
+</ul>
+
+
+
+<p>
+As an example, consider these pitches thrown 
+by right-hander Daisuke Matsuzaka during the
+2009 World Baseball Classic, in a game against
+Cuba.
+This (and following) graphics come from the 
+wonderful 
+<a href="http://brooksbaseball.net/pfx/">
+Pitch FX tool on brooksbaseball.net </a>.
+The graph shows the speed of each pitch on 
+the vertical axis (fast at the top, slow at the
+bottom),
+and the amount of horizontal motion 
+relative to a ball with no spin on the
+horizontal axis.
+The graph shows motion from the catcher's point
+of view, so first base is to the right
+and third base to the left.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/matsuzaka_3_15_2009.gif" width="702" height="500">
+
+</p><p>
+Let me add a few notes to this picture, and identify the
+different pitches.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/matsuzaka_label.gif" width="722" height="520">
+
+</p><p>
+The easiest pitches to recognize are the fastball --
+it's the fastest, of course! -- and the changeup,
+which ends up in nearly the same horizontal location
+as the fastball, but moves more slowly.
+The clump of points at lower right might be called
+either "curves" or "sliders", depending on how
+much they break and how fast they are.
+Curves go slower and have a larger break,
+while sliders move less and go faster.
+The group of pitches near the center,
+with little horizontal motion and thrown at
+86-90 mph, are "cut fastballs", or "cutters."
+
+</p><p>
+Now, for a left-handed pitcher, everything goes in 
+the opposite direction.
+The slight tilt applied to an ordinary curveball
+will go in the opposite direction,
+just because a left-handed pitcher's arm is
+tilted towards the first-base side of the 
+field, rather than the third-base side
+of the field.
+A lefty's curve will break towards the
+third-base side of the plate.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/curves_sidebyside.gif" width="1084" height="643">
+
+</p><p>
+Likewise, the slight tilt applied to an ordinary 
+fastball by a left-handed pitcher will cause it to 
+break towards FIRST base, not third base.
+
+</p><p>
+As an example, consider left-handed pitcher Jon Lester's
+start against the Minnesota Twins on July 8, 2008.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/lester_7_8_2008.gif" width="701" height="500">
+
+</p><p>
+Note how this distribution is basically the mirror-image
+of Matsuzaka's: fastballs are in the upper-RIGHT corner
+(instead of upper-left), and breaking stuff is
+in the lower-LEFT corner (instead of lower-right).
+Let me add some labels again:
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/lester_label.gif" width="721" height="520">
+
+</p><p>
+I'm calling the clump of pitches with speed 86-90 mph
+and a slight movement towards third base "cut fastballs",
+but one might also label them "sliders", I suppose.
+
+</p><p>
+One way to contrast the two pitchers is to put all their
+pitches on a single graph.
+I apologize for the somewhat washed-out appearance of this
+composite, but at least it does the job.
+Matsuzaka's pitches are in black, Lester's in red.
+
+</p><p>
+<img src="./The effect of air on baseball pitches_files/lester_matsu_label.gif" width="721" height="520">
+
+</p><p>
+Lester's pitches have a greater range of speeds, 
+from a 4-seam fastball at about 95 mph to a very slow curve
+at about 74 mph -- a 21-mph difference.
+Matsusaka can only manage a 16-mph difference between
+his best fastball and slowest changeup.
+On the other hand, Matsuzaka's horizontal range
+of motion is about 19 inches, while Lester's is
+only 16 inches.
+Perhaps one might describe Lester as a "power" pitcher,
+while Matsuzaka might be more of a "breaking-ball" pitcher.
+
+</p><p>
+Okay, to summarize,
+
+</p><ul>
+<li> right handed pitchers, in general, throw
+       <ul>
+       <li> fastballs that break towards the third base side </li>
+       <li> curves that break towards the first base side </li>
+       </ul>
+   </li>
+<li> left handed pitchers, in general, throw
+       <ul>
+       <li> fastballs that break towards the first base side </li>
+       <li> curves that break towards the third base side </li>
+       </ul>
+   </li>
+</ul>
+
+<p>
+What about hitters?  Which pitches give them the most trouble?
+I'm not a baseball player, but from the constant attempt of
+defenses to match a lefty pitcher against a lefty batter,
+and vice versa, we can conclude that
+<b>batters have more difficulty hitting curves and sliders which
+break AWAY from them. </b>
+
+</p><p>
+If this is true, then one might expect to see some
+correlation between the range of horizontal motion
+in a pitcher's arsenal and the difference in his
+performance against batters on opposite sides of
+the plate.  
+That is, a right-handed pitcher whose curves break very strongly 
+in the horizontal plane might do very much BETTER
+against right-handed batters than he does against left-handed
+batters,
+while a right-handed pitcher with only a small horizontal
+break might not show such a difference.
+
+</p><p>
+Just for fun (since a proper test would involve
+many, many pitchers, not just two), let's test this theory against
+the two pitchers I've used in this example:
+Lester and Matsuzaka.  
+Since Lester's horizontal range is smaller than
+Matsuzaka's, we might guess that his "split"
+between right-handed and left-handed batters would
+be smaller.
+I grabbed data for the 2008 season 
+from 
+<a href="http://www.baseball-reference.com/">baseball-reference.com</a> ...
+
+</p><center>
+<table border="2">
+<tbody><tr>
+   <td width="100"> Pitcher </td>
+   <td colspan="3"> Vs. right-handed batters </td>
+   <td width="20">  </td>
+   <td colspan="3"> Vs. left-handed batters </td>
+ </tr>
+<tr>
+   <td> . </td>
+   <td> BA </td>
+   <td> OBP </td>
+   <td> SLG </td>
+   <td>  </td>
+   <td> BA </td>
+   <td> OBP </td>
+   <td> SLG </td>
+ </tr>
+<tr>
+  <td> Matsuzaka </td>
+  <td> 0.195 </td>
+  <td> 0.284 </td>
+  <td> 0.280 </td>
+  <td>  </td>
+  <td> 0.225 </td>
+  <td> 0.353 </td>
+  <td> 0.365 </td>
+ </tr>
+<tr>
+  <td> Lester </td>
+  <td> 0.273 </td>
+  <td> 0.341 </td>
+  <td> 0.395 </td>
+  <td>  </td>
+  <td> 0.217 </td>
+  <td> 0.269 </td>
+  <td> 0.302 </td>
+ </tr>
+</tbody></table>
+</center>
+
+<p>
+Well, each pitcher does have a platoon split in
+the predicted manner -- so that's good.
+But Lester's split is larger than Matsuzaka's,
+despite Lester's smaller horizontal range.
+Obviously, there's a lot more to pitching than
+how much spin one can put on a ball ...
+
+
+
+
+
+
+
+
+
+
+
+
+</p><p>
+</p><hr>
+<p>
+</p><h4>
+<a name="info">
+For more information
+</a>
+</h4>
+
+<ul>
+<li> <a href="http://webusers.npl.uiuc.edu/~a-nathan/pob/">
+          Alan Nathan's "Physics of Baseball" website </a>
+       has links to a number of technical articles written 
+       by Dr. Nathan, as well as pointers to other sites
+  </li>
+<li> <a href="http://www.amazon.com/Physics-Baseball-Robert-Kemp-Adair/dp/0060084367">
+          Robert Adair's book "The Physics of Baseball" </a>
+       contains a wealth of information on the physics of the sport.
+  </li>
+<li> <a href="http://fastballs.wordpress.com/2008/01/14/mvn-a-pitchfx-primer/">
+          Mike Feast's primer to the PITCH f/x system </a>
+   </li>
+<li> <a href="http://www.brooksbaseball.net/pfx/">
+          The Pitch FX tool at BrooksBaseball.net </a>
+   </li>
+<li> <a href="http://www.geocities.com/k_achutarao/MAGNUS/magnus.html">
+          A brief history and explanation of the Magnus effect </a>
+   </li>
+<li> The <a href="http://fastballs.wordpress.com/2007/09/12/mad-dog-mishmash/">
+          Mad Dog mishmash </a>
+          is really an attempt to figure out how many different
+          pitches Greg Maddux throws </li>
+   
+<li> Some examples of wiffle-ball pitchers showing their stuff
+  <ul>
+    <li> <a href="http://www.youtube.com/watch?v=GMk-ZXEhpOE&amp;feature=related">
+            The 2006 Golden Stick Playoffs </a>
+                has a large range of pitches, but no explanations
+                and loud music for a soundtrack
+       </li>
+    <li> <a href="http://www.youtube.com/watch?v=8HErJ-pLunQ">
+            Rob Cotter demonstrates how to throw a wiffle ball </a>
+                explaining grip and arm slot as he goes
+       </li>
+    <li> <a href="http://www.youtube.com/watch?v=5_rslXAXE6Y&amp;feature=related">
+            Just pitches, one after another </a>
+                with no explanation
+       </li>
+    </ul>
+  </li>
+
+</ul>
+
+
+<p>
+</p><hr>
+<p>
+
+<!-- Creative Commons License -->
+</p><p>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/"><img alt="Creative Commons License" border="0" src="./The effect of air on baseball pitches_files/somerights20.gif"></a>
+Copyright © Michael Richmond.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/">Creative Commons License</a>.
+</p><p>
+<!-- /Creative Commons License -->
+<!--
+
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+   <license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.0/" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+   <prohibits rdf:resource="http://web.resource.org/cc/CommercialUse" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+   <requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+</License>
+
+</rdf:RDF>
+
+-->
+
+ 
+
+
+</p></body></html>
