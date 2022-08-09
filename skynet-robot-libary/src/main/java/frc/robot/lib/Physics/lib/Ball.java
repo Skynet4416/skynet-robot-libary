@@ -100,6 +100,8 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
+        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
+
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
         ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
@@ -129,6 +131,8 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
+        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
+
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
         ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
@@ -158,6 +162,8 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
+        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
+
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
         ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
@@ -187,6 +193,7 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
+        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
         ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
@@ -206,11 +213,43 @@ public class Ball extends PhysicalObjectBase {
         System.out.print("\n\n\ny_array_lift_no_recursion = ");
         System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
     }
+    public static void test_more_parameters()
+    {
+        Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
+        ball.set_started_velocity(new Vector(19.9366967045, 19.9366967045, 0.0));
+        ball.set_rotational_velocity(new Vector(0.0, 0.0, -58.422600157894736842105263157895));
+        ball.lift_coeficent = ball.radius.multiply(ball.state.rotational_velocity.getMagnitude())
+                .divide(ball.state.velocity.getMagnitude()); // if cd is close to 0.5 then cl = R*rotational_velocity/v
+                                                             // which/ is S
+        ball.set_position(new Vector(0.0, 0.0000001, 0.0));
+        ball.state.save_to_list();
+        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
+
+
+        ball.before_before_state = new State(ball.state);
+        // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
+        ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
+        pos_array.add(0, new ArrayList<Double>());
+        pos_array.add(1, new ArrayList<Double>());
+        int i = 0;
+        for(i=0; i<2; i++)
+        {
+            ball.calc_magnus_forces();
+            ball.update_position(i);
+            pos_array.get(0).add(ball.state.position.getComponent(0));
+            pos_array.get(1).add(ball.state.position.getComponent(1));
+        }
+        System.out.print("\n\n\nx_array_lift_recursion = ");
+        System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+        System.out.print("\n\n\ny_array_lift_recursion = ");
+        System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
+    }
 
     public static void main(String[] args) {
         test_magnus_recursion();
         test_drag_no_recursion();
         test_lift_no_recursion();
         test_drag_recursion();
+        // test_more_parameters();
     }
 }
