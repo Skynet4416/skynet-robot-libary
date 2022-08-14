@@ -45,6 +45,29 @@ public class State {
 
     }
 
+    public State(double TopMotorRPM, double BottomMotorRPM, double HoodAngle) {
+        this.position = new Vector(0.0, 0.0, 0.0);
+        this.velocity = new Vector(0.0, 0.0, 0.0);
+        this.acceleration = new Vector(0.0, 0.0, 0.0);
+        this.sigma_forces = new Vector(0.0, 0.0, 0.0);
+        this.rotational_velocity = new Vector(0.0, 0.0, 0.0);
+        this.rotational_acceleration = new Vector(0.0, 0.0, 0.0);
+        this.liniar_moment = new Vector(0.0, 0.0, 0.0);
+        this.angular_momentum = new Vector(0.0, 0.0, 0.0);
+        this.energy = () -> 0.0;
+        this.potential_energy = () -> 0.0;
+        this.jerk = new Vector(0.0, 0.0, 0.0);
+        this.kinematics_varuibales = new ArrayList<Vector>();
+        this.angular_velocity = new Vector(0.0, 0.0, 0.0);
+        this.torque = new Vector(0.0, 0.0, 0.0);
+
+        kinematics_varuibales.add(position);
+        kinematics_varuibales.add(velocity);
+        kinematics_varuibales.add(acceleration);
+        kinematics_varuibales.add(jerk);
+
+    }
+
     public void save_to_list() {
         this.kinematics_varuibales.set(0, position);
         this.kinematics_varuibales.set(1, velocity);

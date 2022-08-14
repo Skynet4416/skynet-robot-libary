@@ -18,11 +18,10 @@ import frc.robot.lib.base.MotorControllers.MotorControllerBase;
 import frc.robot.lib.base.MotorControllers.MyTalonSRX;
 
 public abstract class MySubsytemBase extends SubsystemBase {
-    protected List<Pair<MotorControllerBase, DCMotor>> motor_controllers =new  ArrayList<Pair<MotorControllerBase, DCMotor>>();
+    protected List<Pair<MotorControllerBase, DCMotor>> motor_controllers = new ArrayList<Pair<MotorControllerBase, DCMotor>>();
 
     public void add_motor_controller(MotorControllerBase motor_controller, DCMotor motor) {
         this.motor_controllers.add(new Pair<MotorControllerBase, DCMotor>(motor_controller, motor));
     }
-
 
 }

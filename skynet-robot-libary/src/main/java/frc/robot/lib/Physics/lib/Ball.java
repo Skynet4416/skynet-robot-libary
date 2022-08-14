@@ -7,6 +7,7 @@ import com.github.iprodigy.physics.util.vector.Vector;
 
 import frc.robot.lib.Physics.lib.base.PhysicalObjectBase;
 import frc.robot.lib.Physics.lib.base.State;
+import frc.robot.lib.Meth.Target;
 import frc.robot.lib.Physics.Constants;
 
 public class Ball extends PhysicalObjectBase {
@@ -24,6 +25,10 @@ public class Ball extends PhysicalObjectBase {
         this.radius = () -> radius;
         cross_section_area_of_ball = this.radius.multiply(this.radius).multiply(Math.PI);
         this.moment_of_inertia = () -> mass * radius * radius;
+    }
+    public double get_radius()
+    {
+        return radius.getMagnitude();
     }
 
     public void set_position(Vector position) {
@@ -66,6 +71,37 @@ public class Ball extends PhysicalObjectBase {
         // .multiply(Constants.density_of_air).multiply(cross_section_area_of_ball)
         // .multiply(Math.pow(state.velocity.getMagnitude(), 2)));
     }
+
+    public void calc_magnus_forces_nasa() {
+        state.sigma_forces = new Vector(0.0, 0.0, 0.0);
+        Vector velocity_direction = state.velocity.divide(state.velocity.getMagnitude());
+        add_force(Constants.gravitational_acceleration.multiply(mass)); // gravity
+        add_force(velocity_direction.multiply(-0.5).multiply(drag_constant).multiply(Constants.density_of_air)
+                .multiply(cross_section_area_of_ball).multiply(Math.pow(state.velocity.getMagnitude(), 2))); // drag =
+                                                                                                             // -1/2 *
+                                                                                                             // Cd * p *
+                                                                                                             // A * v^2
+                                                                                                             // *v(vector)/abs(v)
+        // System.out.println(velocity_direction.multiply(-0.5).multiply(drag_constant).multiply(Constants.density_of_air)
+        // .multiply(cross_section_area_of_ball).multiply(Math.pow(state.velocity.getMagnitude(),
+        // 2)));
+        Vector axis_of_rotation = state.rotational_velocity.divide(state.rotational_velocity.getMagnitude());
+        System.out.println(velocity_direction.crossProduct3D(axis_of_rotation)
+                .multiply(5.33333333 * Math.PI * Math.PI * Math.pow(radius.getMagnitude(), 3)
+                        * state.rotational_velocity.getMagnitude() * Constants.density_of_air.getMagnitude()
+                        * state.velocity.getMagnitude()));
+
+        add_force(velocity_direction.crossProduct3D(axis_of_rotation)
+                .multiply(5.33333333 * Math.PI * Math.PI * Math.pow(radius.getMagnitude(), 3)
+                        * state.rotational_velocity.getMagnitude() * Constants.density_of_air.getMagnitude()
+                        * state.velocity.getMagnitude())); // magnus = 1/2 cl * p * A * v^2 *
+        // (v(vector)/abd(v) X
+        // rotational_velocity(vector)/abs(rotational_velocity))
+        // System.out.println(velocity_direction.crossProduct3D(axis_of_rotation).multiply(0.5).multiply(lift_coeficent)
+        // .multiply(Constants.density_of_air).multiply(cross_section_area_of_ball)
+        // .multiply(Math.pow(state.velocity.getMagnitude(), 2)));
+    }
+
     public void calc_no_magnusforces() {
         state.sigma_forces = new Vector(0.0, 0.0, 0.0);
         Vector velocity_direction = state.velocity.divide(state.velocity.getMagnitude());
@@ -82,16 +118,51 @@ public class Ball extends PhysicalObjectBase {
         Vector axis_of_rotation = state.rotational_velocity.divide(state.rotational_velocity.getMagnitude());
 
         // add_force(velocity_direction.crossProduct3D(axis_of_rotation).multiply(0.5).multiply(lift_coeficent)
-        //         .multiply(Constants.density_of_air).multiply(cross_section_area_of_ball)
-        //         .multiply(Math.pow(state.velocity.getMagnitude(), 2))); // magnus = 1/2 cl * p * A * v^2 *
-                                                                        // (v(vector)/abd(v) X
-                                                                        // rotational_velocity(vector)/abs(rotational_velocity))
+        // .multiply(Constants.density_of_air).multiply(cross_section_area_of_ball)
+        // .multiply(Math.pow(state.velocity.getMagnitude(), 2))); // magnus = 1/2 cl *
+        // p * A * v^2 *
+        // (v(vector)/abd(v) X
+        // rotational_velocity(vector)/abs(rotational_velocity))
         // System.out.println(velocity_direction.crossProduct3D(axis_of_rotation).multiply(0.5).multiply(lift_coeficent)
         // .multiply(Constants.density_of_air).multiply(cross_section_area_of_ball)
         // .multiply(Math.pow(state.velocity.getMagnitude(), 2)));
     }
-    public static void test_magnus_recursion()
-    {
+
+    public ArrayList<State> simulate_ball() {
+        this.before_before_state = new State(this.state);
+        // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
+        ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
+        pos_array.add(0, new ArrayList<Double>());
+        pos_array.add(1, new ArrayList<Double>());
+        pos_array.add(2, new ArrayList<Double>());
+        pos_array.add(3, new ArrayList<Double>());
+        ArrayList<State> states_array = new ArrayList<State>();
+        states_array.add(new State(this.state));
+        int i = 0;
+        while (this.state.position.getComponent(1) > 0) {
+            // System.out.println(i + " iteration");
+            this.calc_magnus_forces();
+            this.update_position(i);
+            pos_array.get(0).add(this.state.position.getComponent(0)); // x
+            pos_array.get(1).add(this.state.position.getComponent(1)); // y
+            pos_array.get(2).add(this.state.position.getComponent(2)); // z
+            pos_array.get(3).add(this.state.velocity.getDegree()); // alpha
+            states_array.add(new State(this.state));
+            i++;
+        }
+        System.out.print("\n\n\nx_array_lift_recursion = ");
+        System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+        System.out.print("\n\n\ny_array_lift_recursion = ");
+        System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
+        System.out.println("\n\n\n");
+        System.out.print(Arrays.deepToString(pos_array.get(3).toArray()));
+        System.out.println("\n\n\n");
+
+        System.out.println(hub.check(states_array));
+        return states_array;
+    }
+
+    public static void test_magnus_recursion() {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.set_started_velocity(new Vector(19.9366967045, 19.9366967045, 0.0));
         ball.set_rotational_velocity(new Vector(0.0, 0.0, -58.422600157894736842105263157895));
@@ -100,29 +171,43 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
-        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
+        ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
         ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
         pos_array.add(0, new ArrayList<Double>());
         pos_array.add(1, new ArrayList<Double>());
+        pos_array.add(2, new ArrayList<Double>());
+        pos_array.add(3, new ArrayList<Double>());
+        ArrayList<State> states_array = new ArrayList<State>();
+        states_array.add(new State(ball.state));
         int i = 0;
         while (ball.state.position.getComponent(1) > 0) {
             // System.out.println(i + " iteration");
             ball.calc_magnus_forces();
             ball.update_position(i);
-            pos_array.get(0).add(ball.state.position.getComponent(0));
-            pos_array.get(1).add(ball.state.position.getComponent(1));
+            pos_array.get(0).add(ball.state.position.getComponent(0)); // x
+            pos_array.get(1).add(ball.state.position.getComponent(1)); // y
+            pos_array.get(2).add(ball.state.position.getComponent(2)); // z
+            pos_array.get(3).add(ball.state.velocity.getDegree()); // alpha
+            states_array.add(new State(ball.state));
             i++;
         }
         System.out.print("\n\n\nx_array_lift_recursion = ");
         System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
         System.out.print("\n\n\ny_array_lift_recursion = ");
-        System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
+        System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
+        System.out.println("\n\n\n");
+        System.out.print(Arrays.deepToString(pos_array.get(3).toArray()));
+        System.out.println("\n\n\n");
+
+        System.out.println(
+                hub.check(states_array));
+
     }
-    public static void test_drag_recursion()
-    {
+
+    public static void test_drag_recursion() {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.set_started_velocity(new Vector(19.9366967045, 19.9366967045, 0.0));
         ball.set_rotational_velocity(new Vector(0.0, 0.0, -58.422600157894736842105263157895));
@@ -131,7 +216,7 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
-        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
+        ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
@@ -152,8 +237,8 @@ public class Ball extends PhysicalObjectBase {
         System.out.print("\n\n\ny_array_drag_recursion = ");
         System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
     }
-    public static void test_drag_no_recursion()
-    {
+
+    public static void test_drag_no_recursion() {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.set_started_velocity(new Vector(19.9366967045, 19.9366967045, 0.0));
         ball.set_rotational_velocity(new Vector(0.0, 0.0, -58.422600157894736842105263157895));
@@ -162,7 +247,7 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
-        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
+        ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
@@ -183,8 +268,8 @@ public class Ball extends PhysicalObjectBase {
         System.out.print("\n\n\ny_array_drag_no_recursion = ");
         System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
     }
-    public static void test_lift_no_recursion()
-    {
+
+    public static void test_lift_no_recursion() {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.set_started_velocity(new Vector(19.9366967045, 19.9366967045, 0.0));
         ball.set_rotational_velocity(new Vector(0.0, 0.0, -58.422600157894736842105263157895));
@@ -193,7 +278,7 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
-        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
+        ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
         ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
@@ -213,8 +298,8 @@ public class Ball extends PhysicalObjectBase {
         System.out.print("\n\n\ny_array_lift_no_recursion = ");
         System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
     }
-    public static void test_more_parameters()
-    {
+
+    public static void test_more_parameters() {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.set_started_velocity(new Vector(19.9366967045, 19.9366967045, 0.0));
         ball.set_rotational_velocity(new Vector(0.0, 0.0, -58.422600157894736842105263157895));
@@ -223,8 +308,7 @@ public class Ball extends PhysicalObjectBase {
                                                              // which/ is S
         ball.set_position(new Vector(0.0, 0.0000001, 0.0));
         ball.state.save_to_list();
-        ball.state.kinematics_varuibales.add(new Vector(0.0,0.0,0.0));
-
+        ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
         ball.before_before_state = new State(ball.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
@@ -232,8 +316,7 @@ public class Ball extends PhysicalObjectBase {
         pos_array.add(0, new ArrayList<Double>());
         pos_array.add(1, new ArrayList<Double>());
         int i = 0;
-        for(i=0; i<2; i++)
-        {
+        for (i = 0; i < 2; i++) {
             ball.calc_magnus_forces();
             ball.update_position(i);
             pos_array.get(0).add(ball.state.position.getComponent(0));
@@ -245,11 +328,74 @@ public class Ball extends PhysicalObjectBase {
         System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
     }
 
+    public static void test_magnus_adjusted_lift_recursion() {
+        Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
+        ball.set_position(new Vector(0.0, 0.0000001, 0.0));
+        ball.state.save_to_list();
+        ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
+
+        ball.before_before_state = new State(ball.state);
+        // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
+        ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
+        pos_array.add(0, new ArrayList<Double>());
+        pos_array.add(1, new ArrayList<Double>());
+        int i = 0;
+        while (ball.state.position.getComponent(1) > 0) {
+            // System.out.println(i + " iteration");
+            ball.lift_coeficent = ball.radius.multiply(ball.state.rotational_velocity.getMagnitude())
+                    .divide(ball.state.velocity.getMagnitude()); // if cd is close to 0.5 then cl =
+                                                                 // R*rotational_velocity/v
+                                                                 // which/ is S
+            ball.calc_magnus_forces();
+            ball.update_position(i);
+            pos_array.get(0).add(ball.state.position.getComponent(0));
+            pos_array.get(1).add(ball.state.position.getComponent(1));
+            i++;
+        }
+        System.out.print("\n\n\nx_array_changing_lift_recursion = ");
+        System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+        System.out.print("\n\n\ny_array_changing_lift_recursion = ");
+        System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
+    }
+
+    public static void test_magnus_recursion_nasa() {
+        Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
+        ball.set_started_velocity(new Vector(19.9366967045, 19.9366967045, 0.0));
+        ball.set_rotational_velocity(new Vector(0.0, 0.0, -58.422600157894736842105263157895));
+        ball.lift_coeficent = ball.radius.multiply(ball.state.rotational_velocity.getMagnitude())
+                .divide(ball.state.velocity.getMagnitude()); // if cd is close to 0.5 then cl = R*rotational_velocity/v
+                                                             // which/ is S
+        ball.set_position(new Vector(0.0, 0.0000001, 0.0));
+        ball.state.save_to_list();
+        ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
+
+        ball.before_before_state = new State(ball.state);
+        // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
+        ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
+        pos_array.add(0, new ArrayList<Double>());
+        pos_array.add(1, new ArrayList<Double>());
+        int i = 0;
+        while (ball.state.position.getComponent(1) > 0) {
+            // System.out.println(i + " iteration");
+            ball.calc_magnus_forces_nasa();
+            ball.update_position(i);
+            pos_array.get(0).add(ball.state.position.getComponent(0));
+            pos_array.get(1).add(ball.state.position.getComponent(1));
+            i++;
+        }
+        System.out.print("\n\n\nx_array_nasa_lift_recursion = ");
+        System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+        System.out.print("\n\n\ny_array_nasa_lift_recursion = ");
+        System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
+    }
+
     public static void main(String[] args) {
         test_magnus_recursion();
-        test_drag_no_recursion();
-        test_lift_no_recursion();
-        test_drag_recursion();
+        // // test_drag_no_recursion();
+        // // test_lift_no_recursion();
+        // test_drag_recursion();
+        // test_magnus_adjusted_lift_recursion();
+        // test_magnus_recursion_nasa();
         // test_more_parameters();
     }
 }

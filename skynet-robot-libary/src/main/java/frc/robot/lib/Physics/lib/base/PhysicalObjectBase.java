@@ -55,23 +55,27 @@ public abstract class PhysicalObjectBase {
         } else if (state.kinematics_varuibales.size() - turn == 2) {
             // System.out.println("trying to set acceleration");
         } else if (state.kinematics_varuibales.size() - turn > 2) {
-                Vector before_acceleration = before_state.acceleration;
-                Vector current_acceleration = state.acceleration;
-                state.kinematics_varuibales.set(state.kinematics_varuibales.size() - turn, current_acceleration.subtract(before_acceleration).divide(Math.pow(estemation_resulotion.getMagnitude(),state.kinematics_varuibales.size() - turn - 2)));
+            Vector before_acceleration = before_state.acceleration;
+            Vector current_acceleration = state.acceleration;
+            state.kinematics_varuibales.set(state.kinematics_varuibales.size() - turn,
+                    current_acceleration.subtract(before_acceleration).divide(Math
+                            .pow(estemation_resulotion.getMagnitude(), state.kinematics_varuibales.size() - turn - 2)));
         } else {
             Vector current_vector = state.kinematics_varuibales.get(state.kinematics_varuibales.size() - turn);
-            // System.out.println("current vector place " + (state.kinematics_varuibales.size() - turn));
+            // System.out.println("current vector place " +
+            // (state.kinematics_varuibales.size() - turn));
             // System.out.println("loop");
             for (int i = 1; turn > i; i++) {
-                if (state.kinematics_varuibales.size() - turn + i > 2)
-                {
-                    
+                if (state.kinematics_varuibales.size() - turn + i > 2) {
+
                 }
-                // System.out.println("adding vector place" + (state.kinematics_varuibales.size() - turn + i));
+                // System.out.println("adding vector place" +
+                // (state.kinematics_varuibales.size() - turn + i));
                 Vector adding_vector = state.kinematics_varuibales
                         .get(state.kinematics_varuibales.size() - turn + i);
-                // System.out.println(current_vector.getMagnitude() + " += " + adding_vector.getMagnitude() + " * "
-                //         + estemation_resulotion.getMagnitude() + "^" + i + "/" + factorial(i));
+                // System.out.println(current_vector.getMagnitude() + " += " +
+                // adding_vector.getMagnitude() + " * "
+                // + estemation_resulotion.getMagnitude() + "^" + i + "/" + factorial(i));
                 current_vector = current_vector.add(
                         adding_vector.multiply(Math.pow(estemation_resulotion.getMagnitude(), i)).divide(factorial(i)));
 
@@ -82,7 +86,7 @@ public abstract class PhysicalObjectBase {
         }
         recursive_update(before_state, turn + 1, iteration);
     }
-    
+
     protected void recursive_update1(State before_state, int turn, int iteration) {
         System.out.println("Turn: " + turn);
         if (turn > state.kinematics_varuibales.size()) {
@@ -90,21 +94,20 @@ public abstract class PhysicalObjectBase {
         } else if (state.kinematics_varuibales.size() - turn == 2) {
             System.out.println("trying to set acceleration");
         } else if (turn == 1) {
-                System.out.println("first value");
-                Vector before_value = before_state.kinematics_varuibales
-                        .get(state.kinematics_varuibales.size() - turn - 1);
-                Vector current_value = state.kinematics_varuibales.get(state.kinematics_varuibales.size() - turn - 1);
-                state.kinematics_varuibales.set(state.kinematics_varuibales.size() - turn,
-                        current_value.subtract(before_value).divide(estemation_resulotion));
-                System.out.println(state.kinematics_varuibales.get(state.kinematics_varuibales.size() - turn));
+            System.out.println("first value");
+            Vector before_value = before_state.kinematics_varuibales
+                    .get(state.kinematics_varuibales.size() - turn - 1);
+            Vector current_value = state.kinematics_varuibales.get(state.kinematics_varuibales.size() - turn - 1);
+            state.kinematics_varuibales.set(state.kinematics_varuibales.size() - turn,
+                    current_value.subtract(before_value).divide(estemation_resulotion));
+            System.out.println(state.kinematics_varuibales.get(state.kinematics_varuibales.size() - turn));
         } else {
             Vector current_vector = state.kinematics_varuibales.get(state.kinematics_varuibales.size() - turn);
             System.out.println("current vector place " + (state.kinematics_varuibales.size() - turn));
             System.out.println("loop");
             for (int i = 1; turn > i; i++) {
-                if (state.kinematics_varuibales.size() - turn + i > 2)
-                {
-                    
+                if (state.kinematics_varuibales.size() - turn + i > 2) {
+
                 }
                 System.out.println("adding vector place" + (state.kinematics_varuibales.size() - turn + i));
                 Vector adding_vector = state.kinematics_varuibales
