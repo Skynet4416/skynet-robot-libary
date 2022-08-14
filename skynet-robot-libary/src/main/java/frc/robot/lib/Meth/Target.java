@@ -36,6 +36,8 @@ public class Target {
     // }
 
     public Boolean check(ArrayList<State> states) {
+        if (states.size() < 5)
+            return false;
         Segment segment = new Segment(0.0, 0.0, 0.0, 0.0); // LX LY CX CY
         double x_max = this.x_pos + x_size / 2.0;
         double x_min = this.x_pos - x_size / 2.0;
@@ -55,12 +57,16 @@ public class Target {
                 if (segment.LY >= y_min && segment.CY <= y_max) {
                     if (true) { // Z AXIS TBD
                         if (angle_deg >= minimum_entry_angle && angle_deg <= maximum_entry_angle) {
-                            if (velocity >= minimum_entry_velocity && velocity <= maximum_entry_velocity)
+                            if (velocity >= minimum_entry_velocity && velocity <= maximum_entry_velocity) {
+                                System.out.println("SEGMENTY " + segment.LY + " " + segment.CY);
                                 return true;
+                            }
                         }
                     }
                 }
+
             }
+
         }
         return false;
     }
