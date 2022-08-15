@@ -6,16 +6,16 @@ import com.github.iprodigy.physics.util.vector.Vector;
 import frc.robot.lib.Physics.lib.base.State;
 
 public class Target {
-    public final double x_pos;
-    public final double y_pos;
-    public final double z_pos;
-    public final double x_size;
-    public final double y_size;
-    public final double z_size;
-    public final double minimum_entry_angle;
-    public final double maximum_entry_angle;
-    public final double minimum_entry_velocity;
-    public final double maximum_entry_velocity;
+    public double x_pos;
+    public double y_pos;
+    public double z_pos;
+    public double x_size;
+    public double y_size;
+    public double z_size;
+    public double minimum_entry_angle;
+    public double maximum_entry_angle;
+    public double minimum_entry_velocity;
+    public double maximum_entry_velocity;
 
     public Target(Vector position, Vector size, double maximum_entry_angle, double minimum_entry_angle,
             double maximum_entry_velocity, double minimum_entry_velocity) {
@@ -36,6 +36,10 @@ public class Target {
     // return (slope * x) - (slope * startA.getComponent(0)) +
     // startA.getComponent(1);
     // }
+
+    public void set_distance(Double distance) {
+        this.x_pos = distance;
+    }
 
     private static Boolean LineLine(Vector startA, Vector endA, Vector startB, Vector endB) {
         // Boolean Avertical = (endA.getComponent(0) - startA.getComponent(0)) == 0;

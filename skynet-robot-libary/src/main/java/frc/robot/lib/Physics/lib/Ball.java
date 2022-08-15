@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import com.github.iprodigy.physics.util.abstraction.Scalar;
 import com.github.iprodigy.physics.util.vector.Vector;
+import java.io.FileWriter; // Import the FileWriter class
+import java.io.IOException; // Import the IOException class to handle errors
+import java.time.Duration;
+import java.time.Instant;
 
 import frc.robot.lib.Physics.lib.base.PhysicalObjectBase;
 import frc.robot.lib.Physics.lib.base.State;
+import pabeles.concurrency.IntOperatorTask.Min;
 import frc.robot.lib.Meth.Target;
 import frc.robot.lib.Meth.shooter_optimiztion;
 import frc.robot.lib.Meth.shooter_optimiztion.OptimizationType;
@@ -397,24 +402,53 @@ public class Ball extends PhysicalObjectBase {
         System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
     }
 
+    public static void write_csv(Ball projectile, Target target, Double MaxAngle, Double MinAngle, Double MaxRPM,
+            Double MinRPM, Boolean Magnus, Double Resolution) {
+
+        System.out.println("STARTED!");
+        Instant start = Instant.now();
+        try {
+            FileWriter writer = new FileWriter("optimization_output.csv");
+            for (Double i = 0.0; i < 16.0; i += Resolution) {
+                System.out.println(
+                        i + "/" + 16 + " " + Duration.between(start, Instant.now()).toSeconds());
+
+                target.set_distance(i);
+                Vector results = shooter_optimiztion.optimize(projectile, target,
+                        OptimizationType.MINIMIZE, OptimizationType.MINIMIZE,
+                        Magnus ? OptimizationType.MINIMIZE : OptimizationType.IGNORE,
+                        OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
+                        MaxAngle, MinAngle, MaxRPM, MinRPM);
+                System.out.println();
+
+                writer.write(String.valueOf(i));
+                writer.write(",");
+                writer.write(String.valueOf(results.getComponent(0)));
+                writer.write(",");
+                writer.write(String.valueOf(results.getComponent(1)));
+                writer.write(",");
+                writer.write(String.valueOf(results.getComponent(2)));
+                writer.write("\n");
+            }
+            writer.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
-        Double Toleranced_Diameter = (1.22 / 2.0) - (ball.get_radius() * 4);
-        Target hub = new Target(new Vector(3.0, 2.7178, 0.0), new Vector(1.22 - (ball.get_radius() * 4.0), 0.05,
-                1.0), 50, 25, 999, -999);
-        shooter_optimiztion.optimize(ball, hub,
-                OptimizationType.MINIMIZE, OptimizationType.MINIMIZE, OptimizationType.MAXIMIZE,
-                OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
-                90.0, 45.0, 5000.0, 2000.0);
-
-        System.out.println(Toleranced_Diameter);
-        // ball.set_position(new Vector(0.0, 0.1, 0.0));
-        // ball.set_started_velocity(new Vector(15.688027284833968, 17.37157334954557,
-        // 0.0));
-        // ball.set_rotational_velocity(new Vector(0.0, 0.0, 0.0));
-        // ball.simulate_ball(true);
-
+        Target hub = new Target(new Vector(12.0, 2.7178, 0.0), new Vector(1.22 - (ball.get_radius() * 4.0), 0.05,
+                1.0), 999, -999, 999, -999);
+        // Vector results = shooter_optimiztion.optimize(ball, hub,
+        // OptimizationType.MAXIMIZE, OptimizationType.MINIMIZE,
+        // OptimizationType.MINIMIZE,
+        // OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
+        // 90.0, 45.0, 5000.0, 1500.0);
+        write_csv(ball, hub, 90.0, 45.0, 5000.0, 1500.0, true, 0.01);
     }
 }

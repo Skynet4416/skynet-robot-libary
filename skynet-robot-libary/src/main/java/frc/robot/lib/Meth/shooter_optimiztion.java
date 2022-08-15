@@ -46,7 +46,7 @@ public final class shooter_optimiztion {
         return A + (B - A) * Percent;
     }
 
-    public static void optimize(Ball projectile, Target target, // PHYSICALS
+    public static Vector optimize(Ball projectile, Target target, // PHYSICALS
             OptimizationType shooting_angle, OptimizationType shooting_RPM, OptimizationType spin_dierction, // INITIALS
             OptimizationType entrance_velocity, OptimizationType entrance_angle, OptimizationType trajectory_length, // GUIDES
             Double Max_Angle, Double Min_Angle, Double Max_RPM, Double Min_RPM) { // CONSTRAINTS
@@ -66,7 +66,7 @@ public final class shooter_optimiztion {
 
         Double Angle_Resolution = 1.0; // DEGREES
         Double Rotation_Ratio_Resolution = 0.1; // PERCENTAGE
-        Double RPM_Resolution = 25.0; // RPM
+        Double RPM_Resolution = 10.0; // RPM
 
         Double Initial_Angle = (shooting_angle != OptimizationType.MAXIMIZE) ? Max_Angle : Min_Angle;
         Double Angle_Increment = (shooting_angle != OptimizationType.MAXIMIZE) ? -Angle_Resolution : Angle_Resolution;
@@ -84,9 +84,9 @@ public final class shooter_optimiztion {
 
         BooleanInterface full_check = new BooleanInterface() {
             public Boolean run(Double angle, Double rpm, Double ratio) {
-                double TopRPM = (spin_dierction != OptimizationType.IGNORE) ? rpm * ratio : rpm;
+                double TopRPM = (spin_dierction != OptimizationType.IGNORE) ? (rpm * (2 * ratio)) : rpm;
                 double TopRPS = TopRPM / 60.0;
-                double BottomRPM = (spin_dierction != OptimizationType.IGNORE) ? rpm * (1 - ratio) : rpm;
+                double BottomRPM = (spin_dierction != OptimizationType.IGNORE) ? rpm * (2 * (1 - ratio)) : rpm;
                 double BottomRPS = BottomRPM / 60.0;
 
                 double muzzle_velocity = (TopRPS * TopCircumference + BottomRPS * BottomCircumference) / 2.0; // SURFACE
@@ -108,16 +108,16 @@ public final class shooter_optimiztion {
                 ArrayList<State> states = projectile.simulate_ball(false);
                 Boolean result = target.check(states);
 
-                if (result) {
-                    states_to_pos(states);
-                }
+                // if (result) {
+                // states_to_pos(states);
+                // }
 
                 projectile.set_position(new Vector(0.0, 0.1, 0.0));
                 return result;
             };
         };
 
-        System.out.println("STARTED!");
+        // System.out.println("STARTED!");
         Integer results = 0;
         // for (Integer Attempts = 0; Attempts < max_attempts; Attempts++) {
         // CurrentFound = false;
@@ -126,9 +126,9 @@ public final class shooter_optimiztion {
 
         Integer Attempts = 0;
 
-        Double BestTopRPM = 0.0;
-        Double BestBottomRPM = 0.0;
-        Double BestAngle = 0.0;
+        Double BestTopRPM = -1.0;
+        Double BestBottomRPM = -1.0;
+        Double BestAngle = -1.0;
 
         Current_Angle = Initial_Angle;
         while (shooting_angle == OptimizationType.MAXIMIZE ? Current_Angle <= Max_Angle : Current_Angle >= Min_Angle) {
@@ -162,21 +162,9 @@ public final class shooter_optimiztion {
             Failures++;
         }
 
-        // Current_Rotation_Ratio += Rotation_Ratio_Increment;
+        System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM +
+                "\nANGLE " + BestAngle);
 
-        // if (!CurrentFound)
-        // if (full_check.run(Current_Angle, Current_RPM, Current_Rotation_Ratio)) {
-        // Failures = 0;
-        // AllFound = true;
-        // CurrentFound = true;
-        // results++;
-
-        // System.out.println("HIT!");
-        // }
-
-        System.out.println((double) Duration.between(starts, Instant.now()).toMillis() / 1000);
-        System.out.println("DONE, " + results + " results. " + Attempts + " attempts.");
-        System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM + "\nANGLE " + BestAngle);
-
+        return new Vector(BestTopRPM, BestBottomRPM, BestAngle);
     }
 }
