@@ -58,7 +58,7 @@ public final class shooter_optimiztion {
         double TopCircumference = (TopmDiameter) * Math.PI;
 
         double BottominDiameter = 4;
-        double BottommDiameter = Units.inchesToMeters(TopinDiameter);
+        double BottommDiameter = Units.inchesToMeters(BottominDiameter);
         double BottomCircumference = (BottommDiameter) * Math.PI;
 
         ///////////////////////////
@@ -66,13 +66,14 @@ public final class shooter_optimiztion {
 
         Double Angle_Resolution = 1.0; // DEGREES
         Double Rotation_Ratio_Resolution = 0.1; // PERCENTAGE
-        Double RPM_Resolution = 100.0; // RPM
+        Double RPM_Resolution = 25.0; // RPM
 
         Double Initial_Angle = (shooting_angle != OptimizationType.MAXIMIZE) ? Max_Angle : Min_Angle;
         Double Angle_Increment = (shooting_angle != OptimizationType.MAXIMIZE) ? -Angle_Resolution : Angle_Resolution;
         Double Current_Angle = Initial_Angle;
 
-        Double Initial_Rotation_Ratio = (spin_dierction != OptimizationType.MAXIMIZE) ? 1.0 : 0.0;
+        Double Initial_Rotation_Ratio = (spin_dierction != OptimizationType.MAXIMIZE) ? 1 - (Min_RPM / Max_RPM)
+                : (Min_RPM / Max_RPM);
         Double Rotation_Ratio_Increment = (spin_dierction != OptimizationType.MAXIMIZE) ? -Rotation_Ratio_Resolution
                 : Rotation_Ratio_Resolution;
         Double Current_Rotation_Ratio = (spin_dierction == OptimizationType.IGNORE) ? -1.0 : Initial_Rotation_Ratio;
@@ -106,6 +107,7 @@ public final class shooter_optimiztion {
 
                 ArrayList<State> states = projectile.simulate_ball(false);
                 Boolean result = target.check(states);
+
                 if (result) {
                     states_to_pos(states);
                 }
@@ -124,29 +126,40 @@ public final class shooter_optimiztion {
 
         Integer Attempts = 0;
 
+        Double BestTopRPM = 0.0;
+        Double BestBottomRPM = 0.0;
+        Double BestAngle = 0.0;
+
         Current_Angle = Initial_Angle;
         while (shooting_angle == OptimizationType.MAXIMIZE ? Current_Angle <= Max_Angle : Current_Angle >= Min_Angle) {
             Current_RPM = Initial_RPM;
             while (shooting_RPM == OptimizationType.MAXIMIZE ? Current_RPM <= Max_RPM : Current_RPM >= Min_RPM) {
+                Current_Rotation_Ratio = Initial_Rotation_Ratio;
+                do {
 
-                Attempts++;
-                if (full_check.run(Current_Angle, Current_RPM, Current_Rotation_Ratio)) {
-                    Failures = 0;
-                    results++;
+                    Attempts++;
+                    if (full_check.run(Current_Angle, Current_RPM, Current_Rotation_Ratio)) {
+                        Failures = 0;
+                        results++;
+                        BestTopRPM = (spin_dierction != OptimizationType.IGNORE)
+                                ? Current_RPM * Current_Rotation_Ratio
+                                : Current_RPM;
 
-                    // System.out.println("HIT> " + Current_RPM + " " + Current_Angle);
-                } else {
-                    // System.out.println("NOHIT");
-                    Failures++;
-                }
+                        BestBottomRPM = (spin_dierction != OptimizationType.IGNORE)
+                                ? Current_RPM * (1 - Current_Rotation_Ratio)
+                                : Current_RPM;
+                        BestAngle = Current_Angle;
+
+                        // System.out.println("HIT> " + Current_RPM + " " + Current_Angle);
+                    }
+                    Current_Rotation_Ratio += Rotation_Ratio_Increment;
+                } while ((spin_dierction == OptimizationType.MAXIMIZE
+                        ? Current_Rotation_Ratio <= 1.0 - (Min_RPM / Max_RPM)
+                        : Current_Rotation_Ratio >= (Min_RPM / Max_RPM)) && spin_dierction != OptimizationType.IGNORE);
                 Current_RPM += RPM_Increment;
             }
             Current_Angle += Angle_Increment;
-
-            // if (Failures > failure_tolerance && results > 0) {
-            // System.out.println("STOPPED EARLY");
-            // break;
-            // }
+            Failures++;
         }
 
         // Current_Rotation_Ratio += Rotation_Ratio_Increment;
@@ -163,6 +176,7 @@ public final class shooter_optimiztion {
 
         System.out.println((double) Duration.between(starts, Instant.now()).toMillis() / 1000);
         System.out.println("DONE, " + results + " results. " + Attempts + " attempts.");
+        System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM + "\nANGLE " + BestAngle);
 
     }
 }

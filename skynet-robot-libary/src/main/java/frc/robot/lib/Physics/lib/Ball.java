@@ -401,14 +401,15 @@ public class Ball extends PhysicalObjectBase {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
-        Target hub = new Target(new Vector(16.0, 2.7178, 1.0), new Vector(1.22, 0.5,
-                1.0), 999, -999, 999, -999);
+        Double Toleranced_Diameter = (1.22 / 2.0) - (ball.get_radius() * 4);
+        Target hub = new Target(new Vector(3.0, 2.7178, 0.0), new Vector(1.22 - (ball.get_radius() * 4.0), 0.05,
+                1.0), 50, 25, 999, -999);
         shooter_optimiztion.optimize(ball, hub,
-                OptimizationType.MINIMIZE, OptimizationType.MINIMIZE,
-                OptimizationType.IGNORE,
+                OptimizationType.MINIMIZE, OptimizationType.MINIMIZE, OptimizationType.MAXIMIZE,
                 OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
-                90.0, 45.0, 5000.0, 0.0);
+                90.0, 45.0, 5000.0, 2000.0);
 
+        System.out.println(Toleranced_Diameter);
         // ball.set_position(new Vector(0.0, 0.1, 0.0));
         // ball.set_started_velocity(new Vector(15.688027284833968, 17.37157334954557,
         // 0.0));
