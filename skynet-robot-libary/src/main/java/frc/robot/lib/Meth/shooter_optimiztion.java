@@ -112,7 +112,9 @@ public final class shooter_optimiztion {
                 Boolean result = target.check(states);
 
                 if (result) {
-                    states_to_pos(states);
+                    // states_to_pos(states);
+                    // System.out.println("\n\n" + started_velocity);
+                    // System.out.println(started_rotational_velocity);
                 }
 
                 projectile.set_position(new Vector(0.0, 0.1, 0.0));
@@ -157,16 +159,16 @@ public final class shooter_optimiztion {
                     }
                     Current_Rotation_Ratio += Rotation_Ratio_Increment;
                 } while ((spin_dierction == OptimizationType.MAXIMIZE
-                        ? Current_Rotation_Ratio <= 1.0 - (Min_RPM / Max_RPM)
-                        : Current_Rotation_Ratio >= (Min_RPM / Max_RPM)) && spin_dierction != OptimizationType.IGNORE);
+                        ? Current_Rotation_Ratio <= 1.0
+                        : Current_Rotation_Ratio >= 0 && spin_dierction != OptimizationType.IGNORE));
                 Current_RPM += RPM_Increment;
             }
             Current_Angle += Angle_Increment;
             Failures++;
         }
 
-        System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM +
-                "\nANGLE " + (90.0 - BestAngle));
+        // System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM +
+        // "\nANGLE " + (90.0 - BestAngle));
 
         return new Vector(BestTopRPM, BestBottomRPM, (90.0 - BestAngle));
     }
