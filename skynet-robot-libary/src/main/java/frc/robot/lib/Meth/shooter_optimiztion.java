@@ -72,8 +72,8 @@ public final class shooter_optimiztion {
         Double Angle_Increment = (shooting_angle != OptimizationType.MAXIMIZE) ? -Angle_Resolution : Angle_Resolution;
         Double Current_Angle = Initial_Angle;
 
-        Double Initial_Rotation_Ratio = (spin_dierction != OptimizationType.MAXIMIZE) ? 1 - (Min_RPM / Max_RPM)
-                : (Min_RPM / Max_RPM);
+        Double Initial_Rotation_Ratio = (spin_dierction != OptimizationType.MAXIMIZE) ? 1 - 2 * (Min_RPM / Max_RPM)
+                : 2 * (Min_RPM / Max_RPM);
         Double Rotation_Ratio_Increment = (spin_dierction != OptimizationType.MAXIMIZE) ? -Rotation_Ratio_Resolution
                 : Rotation_Ratio_Resolution;
         Double Current_Rotation_Ratio = (spin_dierction == OptimizationType.IGNORE) ? -1.0 : Initial_Rotation_Ratio;
@@ -91,7 +91,7 @@ public final class shooter_optimiztion {
 
                 double muzzle_velocity = (TopRPS * TopCircumference + BottomRPS * BottomCircumference) / 2.0; // SURFACE
                                                                                                               // SPEED
-                double angle_rads = angle; // IN RADIANS
+                double angle_rads = Math.toRadians(angle); // IN RADIANS
 
                 double TopRads = 0.104719755 * TopRPM;
                 double BottompRads = 0.104719755 * BottomRPM;
@@ -106,11 +106,12 @@ public final class shooter_optimiztion {
                 projectile.set_rotational_velocity(started_rotational_velocity);
 
                 ArrayList<State> states = projectile.simulate_ball(false);
+
                 Boolean result = target.check(states);
 
-                // if (result) {
-                // states_to_pos(states);
-                // }
+                if (result) {
+                    states_to_pos(states);
+                }
 
                 projectile.set_position(new Vector(0.0, 0.1, 0.0));
                 return result;

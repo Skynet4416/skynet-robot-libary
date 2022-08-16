@@ -442,13 +442,13 @@ public class Ball extends PhysicalObjectBase {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
-        Target hub = new Target(new Vector(12.0, 2.7178, 0.0), new Vector(1.22 - (ball.get_radius() * 4.0), 0.05,
-                1.0), 999, -999, 999, -999);
-        // Vector results = shooter_optimiztion.optimize(ball, hub,
-        // OptimizationType.MAXIMIZE, OptimizationType.MINIMIZE,
-        // OptimizationType.MINIMIZE,
-        // OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
-        // 90.0, 45.0, 5000.0, 1500.0);
-        write_csv(ball, hub, 90.0, 45.0, 5000.0, 1500.0, true, 0.01);
+        Target hub = new Target(new Vector(8.0, 2.7178, 0.0), new Vector(1.22 - (ball.get_radius() * 4.0), 0.05,
+                1.0), 45, 0, 999, -999);
+        Vector results = shooter_optimiztion.optimize(ball, hub,
+                OptimizationType.MINIMIZE, OptimizationType.MINIMIZE,
+                OptimizationType.MINIMIZE,
+                OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
+                45.0, 0.0, 5000.0, 1500.0);
+        // write_csv(ball, hub, 90.0, 45.0, 5000.0, 1500.0, true, 0.01);
     }
 }

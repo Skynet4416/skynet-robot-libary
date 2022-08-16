@@ -129,6 +129,7 @@ public class Target {
             segment.CY = states.get(index).position.getComponent(1);
 
             double angle_deg = -(Math.toDegrees(Math.atan2(segment.CY - segment.LY, segment.CX - segment.LX)));
+
             double velocity = new Vector(segment.CX - segment.LX, segment.CY - segment.LY).getMagnitude();
 
             if (LineLine(new Vector(segment.LX, segment.LY), new Vector(segment.CX, segment.CY),
@@ -145,6 +146,7 @@ public class Target {
                         if (velocity >= minimum_entry_velocity && velocity <= maximum_entry_velocity) {
                             return true;
                         }
+                    } else {
                     }
                 }
             }
