@@ -51,6 +51,8 @@ public final class shooter_optimiztion {
             OptimizationType entrance_velocity, OptimizationType entrance_angle, OptimizationType trajectory_length, // GUIDES
             Double Max_Angle, Double Min_Angle, Double Max_RPM, Double Min_RPM) { // CONSTRAINTS
 
+        Min_Angle = 90 - Min_Angle;
+        Max_Angle = 90 - Max_Angle;
         Instant starts = Instant.now();
 
         double TopinDiameter = 4;
@@ -68,7 +70,7 @@ public final class shooter_optimiztion {
         Double Rotation_Ratio_Resolution = 0.1; // PERCENTAGE
         Double RPM_Resolution = 10.0; // RPM
 
-        Double Initial_Angle = (shooting_angle != OptimizationType.MAXIMIZE) ? Max_Angle : Min_Angle;
+        Double Initial_Angle = (shooting_angle != OptimizationType.MAXIMIZE) ? Min_Angle : Max_Angle;
         Double Angle_Increment = (shooting_angle != OptimizationType.MAXIMIZE) ? -Angle_Resolution : Angle_Resolution;
         Double Current_Angle = Initial_Angle;
 
@@ -132,7 +134,7 @@ public final class shooter_optimiztion {
         Double BestAngle = -1.0;
 
         Current_Angle = Initial_Angle;
-        while (shooting_angle == OptimizationType.MAXIMIZE ? Current_Angle <= Max_Angle : Current_Angle >= Min_Angle) {
+        while (shooting_angle == OptimizationType.MAXIMIZE ? Current_Angle <= Min_Angle : Current_Angle >= Max_Angle) {
             Current_RPM = Initial_RPM;
             while (shooting_RPM == OptimizationType.MAXIMIZE ? Current_RPM <= Max_RPM : Current_RPM >= Min_RPM) {
                 Current_Rotation_Ratio = Initial_Rotation_Ratio;
@@ -164,8 +166,8 @@ public final class shooter_optimiztion {
         }
 
         System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM +
-                "\nANGLE " + BestAngle);
+                "\nANGLE " + (90.0 - BestAngle));
 
-        return new Vector(BestTopRPM, BestBottomRPM, BestAngle);
+        return new Vector(BestTopRPM, BestBottomRPM, (90.0 - BestAngle));
     }
 }

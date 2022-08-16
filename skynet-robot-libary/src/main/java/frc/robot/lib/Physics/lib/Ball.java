@@ -448,7 +448,7 @@ public class Ball extends PhysicalObjectBase {
                 OptimizationType.MINIMIZE, OptimizationType.MINIMIZE,
                 OptimizationType.MINIMIZE,
                 OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
-                45.0, 0.0, 5000.0, 1500.0);
+                90.0, 45.0, 5000.0, 1500.0);
         // write_csv(ball, hub, 90.0, 45.0, 5000.0, 1500.0, true, 0.01);
     }
 }
