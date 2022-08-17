@@ -1,5 +1,7 @@
 package frc.robot.lib.Meth;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ public final class shooter_optimiztion {
         MINIMIZE,
         IGNORE
     }
+
+    public static NumberFormat formatter = new DecimalFormat("#0.00");
 
     public static void states_to_pos(ArrayList<State> states) {
         ArrayList<Double> x = new ArrayList<Double>();

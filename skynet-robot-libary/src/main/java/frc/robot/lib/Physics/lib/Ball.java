@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import com.github.iprodigy.physics.util.abstraction.Scalar;
 import com.github.iprodigy.physics.util.vector.Vector;
+
+import edu.wpi.first.math.util.Units;
+
 import java.io.FileWriter; // Import the FileWriter class
 import java.io.IOException; // Import the IOException class to handle errors
 import java.time.Duration;
@@ -408,27 +411,63 @@ public class Ball extends PhysicalObjectBase {
         System.out.println("STARTED!");
         Instant start = Instant.now();
         try {
+            double TopinDiameter = 4;
+            double TopmDiameter = Units.inchesToMeters(TopinDiameter);
+            double TopCircumference = (TopmDiameter) * Math.PI;
+
+            double BottominDiameter = 4;
+            double BottommDiameter = Units.inchesToMeters(BottominDiameter);
+            double BottomCircumference = (BottommDiameter) * Math.PI;
+
             FileWriter writer = new FileWriter("optimization_output.csv");
-            for (Double i = 0.0; i < 16.0; i += Resolution) {
-                System.out.println(
-                        i + "/" + 16 + " " + Duration.between(start, Instant.now()).toSeconds());
+            for (Double angle = MinAngle; angle < MaxAngle; angle += 1) {
+                for (Double rpm = MinRPM; rpm < MaxRPM; rpm += 100) {
+                    for (Double ratio = -1.0; ratio < 1.0; ratio += 0.1) {
+                        double TopRPM = ratio > 0.0 ? rpm * (ratio - 1) : rpm;
+                        double TopRPS = TopRPM / 60.0;
+                        double BottomRPM = ratio < 0.0 ? rpm * (1 - ratio) : rpm;
+                        double BottomRPS = BottomRPM / 60.0;
 
-                target.set_distance(i);
-                Vector results = shooter_optimiztion.optimize(projectile, target,
-                        OptimizationType.MINIMIZE, OptimizationType.MINIMIZE,
-                        Magnus ? OptimizationType.MINIMIZE : OptimizationType.IGNORE,
-                        OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
-                        MaxAngle, MinAngle, MaxRPM, MinRPM);
-                System.out.println();
+                        double muzzle_velocity = (TopRPS * TopCircumference + BottomRPS * BottomCircumference) / 2.0; // SURFACE
+                                                                                                                      // SPEED
+                        double angle_rads = Math.toRadians(angle); // IN RADIANS
 
-                writer.write(String.valueOf(i));
-                writer.write(",");
-                writer.write(String.valueOf(results.getComponent(0)));
-                writer.write(",");
-                writer.write(String.valueOf(results.getComponent(1)));
-                writer.write(",");
-                writer.write(String.valueOf(results.getComponent(2)));
-                writer.write("\n");
+                        double TopRads = 0.104719755 * TopRPM;
+                        double BottompRads = 0.104719755 * BottomRPM;
+
+                        Vector started_velocity = new Vector(muzzle_velocity * Math.sin(angle_rads),
+                                muzzle_velocity * Math.cos(angle_rads), 0.0); // m/s
+                        Vector started_rotational_velocity = new Vector(0.0, 0.0,
+                                (TopRads * TopmDiameter / 2 - BottompRads * BottommDiameter / 2)
+                                        / (2 * projectile.get_radius())); // radians
+
+                        projectile.set_position(new Vector(0.0, 0.1, 0.0));
+                        projectile.set_started_velocity(started_velocity);
+                        projectile.set_rotational_velocity(started_rotational_velocity);
+
+                        ArrayList<State> states = projectile.simulate_ball(false);
+                        for (Double distance = 0.0; distance < 16.0; distance += 0.1) {
+                            // System.out.println(distance);
+                            target.set_distance(distance);
+
+                            Boolean result = target.check(states);
+
+                            if (result && TopRPM > MinRPM && BottomRPM > MinRPM) {
+                                System.out.println(TopRPM + " " + BottomRPM + " " + (90.0 - angle) + " " + distance);
+                                writer.write(String.valueOf(shooter_optimiztion.formatter.format(distance)));
+                                writer.write(",");
+                                writer.write(String.valueOf(shooter_optimiztion.formatter.format(90.0 - angle)));
+                                writer.write(",");
+                                writer.write(String.valueOf(shooter_optimiztion.formatter.format(TopRPM)));
+                                writer.write(",");
+                                writer.write(String.valueOf(shooter_optimiztion.formatter.format(BottomRPM)));
+                                writer.write("\n");
+                                break;
+                            }
+                        }
+
+                    }
+                }
             }
             writer.close();
             System.out.println("Successfully wrote to the file.");
@@ -449,6 +488,8 @@ public class Ball extends PhysicalObjectBase {
         // OptimizationType.MINIMIZE,
         // OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
         // 90.0, 45.0, 5000.0, 1500.0);
-        write_csv(ball, hub, 90.0, 45.0, 5000.0, 1500.0, true, 0.1);
+
+        // ANGLE FROM Y AXIS ^
+        write_csv(ball, hub, 45.0, 0.0, 5000.0, 1500.0, true, 0.1);
     }
 }
