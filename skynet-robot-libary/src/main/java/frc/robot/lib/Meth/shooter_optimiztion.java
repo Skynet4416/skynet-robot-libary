@@ -68,17 +68,17 @@ public final class shooter_optimiztion {
 
         Double Angle_Resolution = 1.0; // DEGREES
         Double Rotation_Ratio_Resolution = 0.1; // PERCENTAGE
-        Double RPM_Resolution = 10.0; // RPM
+        Double RPM_Resolution = 50.0; // RPM
 
         Double Initial_Angle = (shooting_angle != OptimizationType.MAXIMIZE) ? Min_Angle : Max_Angle;
         Double Angle_Increment = (shooting_angle != OptimizationType.MAXIMIZE) ? -Angle_Resolution : Angle_Resolution;
         Double Current_Angle = Initial_Angle;
 
-        Double Initial_Rotation_Ratio = (spin_dierction != OptimizationType.MAXIMIZE) ? 1 - 2 * (Min_RPM / Max_RPM)
-                : 2 * (Min_RPM / Max_RPM);
-        Double Rotation_Ratio_Increment = (spin_dierction != OptimizationType.MAXIMIZE) ? -Rotation_Ratio_Resolution
-                : Rotation_Ratio_Resolution;
-        Double Current_Rotation_Ratio = (spin_dierction == OptimizationType.IGNORE) ? -1.0 : Initial_Rotation_Ratio;
+        Double Initial_Rotation_Ratio = (spin_dierction != OptimizationType.MAXIMIZE) ? -1.0 : 1.0;
+        Double Rotation_Ratio_Increment = (spin_dierction != OptimizationType.MAXIMIZE) ? Rotation_Ratio_Resolution
+                : -Rotation_Ratio_Resolution;
+        Double Current_Rotation_Ratio = (spin_dierction == OptimizationType.IGNORE) ? Initial_Rotation_Ratio
+                : Initial_Rotation_Ratio;
 
         Double Initial_RPM = (shooting_RPM != OptimizationType.MAXIMIZE) ? Max_RPM : Min_RPM;
         Double RPM_Increment = (shooting_RPM != OptimizationType.MAXIMIZE) ? -RPM_Resolution : RPM_Resolution;
@@ -86,9 +86,13 @@ public final class shooter_optimiztion {
 
         BooleanInterface full_check = new BooleanInterface() {
             public Boolean run(Double angle, Double rpm, Double ratio) {
-                double TopRPM = (spin_dierction != OptimizationType.IGNORE) ? (rpm * (2 * ratio)) : rpm;
+                double TopRPM = (spin_dierction != OptimizationType.IGNORE)
+                        ? (ratio > 0.0 ? rpm * (ratio - 1) : rpm)
+                        : rpm;
                 double TopRPS = TopRPM / 60.0;
-                double BottomRPM = (spin_dierction != OptimizationType.IGNORE) ? rpm * (2 * (1 - ratio)) : rpm;
+                double BottomRPM = (spin_dierction != OptimizationType.IGNORE)
+                        ? (ratio < 0.0 ? rpm * (1 - ratio) : rpm)
+                        : rpm;
                 double BottomRPS = BottomRPM / 60.0;
 
                 double muzzle_velocity = (TopRPS * TopCircumference + BottomRPS * BottomCircumference) / 2.0; // SURFACE
@@ -112,7 +116,13 @@ public final class shooter_optimiztion {
                 Boolean result = target.check(states);
 
                 if (result) {
+
+                    // System.out.println(TopRPM);
+                    // System.out.println(BottomRPM);
+                    // System.out.println(" ");
+
                     // states_to_pos(states);
+
                     // System.out.println("\n\n" + started_velocity);
                     // System.out.println(started_rotational_velocity);
                 }
@@ -141,34 +151,35 @@ public final class shooter_optimiztion {
             while (shooting_RPM == OptimizationType.MAXIMIZE ? Current_RPM <= Max_RPM : Current_RPM >= Min_RPM) {
                 Current_Rotation_Ratio = Initial_Rotation_Ratio;
                 do {
-
                     Attempts++;
                     if (full_check.run(Current_Angle, Current_RPM, Current_Rotation_Ratio)) {
                         Failures = 0;
                         results++;
                         BestTopRPM = (spin_dierction != OptimizationType.IGNORE)
-                                ? Current_RPM * Current_Rotation_Ratio
+                                ? (Current_Rotation_Ratio > 0.0 ? Current_RPM * (Current_Rotation_Ratio - 1)
+                                        : Current_RPM)
                                 : Current_RPM;
 
                         BestBottomRPM = (spin_dierction != OptimizationType.IGNORE)
-                                ? Current_RPM * (1 - Current_Rotation_Ratio)
+                                ? (Current_Rotation_Ratio < 0.0 ? Current_RPM * (1 - Current_Rotation_Ratio)
+                                        : Current_RPM)
                                 : Current_RPM;
                         BestAngle = Current_Angle;
 
                         // System.out.println("HIT> " + Current_RPM + " " + Current_Angle);
                     }
                     Current_Rotation_Ratio += Rotation_Ratio_Increment;
-                } while ((spin_dierction == OptimizationType.MAXIMIZE
-                        ? Current_Rotation_Ratio <= 1.0
-                        : Current_Rotation_Ratio >= 0 && spin_dierction != OptimizationType.IGNORE));
+                } while (Current_Rotation_Ratio <= 1.0 && Current_Rotation_Ratio >= -1.0
+                        && spin_dierction != OptimizationType.IGNORE);
                 Current_RPM += RPM_Increment;
             }
+            // System.out.println(90 - Current_Angle);
             Current_Angle += Angle_Increment;
             Failures++;
         }
 
-        // System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM +
-        // "\nANGLE " + (90.0 - BestAngle));
+        System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM +
+                "\nANGLE " + (90.0 - BestAngle));
 
         return new Vector(BestTopRPM, BestBottomRPM, (90.0 - BestAngle));
     }
