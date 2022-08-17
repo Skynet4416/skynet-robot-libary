@@ -55,9 +55,11 @@ public final class shooter_optimiztion {
         return A + (B - A) * Percent;
     }
 
-    private static Double full_distance_check(Double current_Angle, Double current_RPM, Double current_Rotation_Ratio) {
-        return null;
-    }
+    // private static Double full_distance_check(Double current_Angle, Double
+    // current_RPM, Double current_Rotation_Ratio) {
+
+    // return null;
+    // }
 
     public static Vector optimize(Ball projectile, Target target, // PHYSICALS
             OptimizationType shooting_angle, OptimizationType shooting_RPM, OptimizationType spin_dierction, // INITIALS
@@ -271,6 +273,48 @@ public final class shooter_optimiztion {
             };
         };
 
+        DoubleInterface full_distance_check = new DoubleInterface() {
+            public Double run(Double angle, Double rpm, Double ratio) {
+                double TopRPM = (ratio > 0.0 ? rpm * (ratio - 1) : rpm);
+                double TopRPS = TopRPM / 60.0;
+                double BottomRPM = ratio < 0.0 ? rpm * (1 - ratio) : rpm;
+                double BottomRPS = BottomRPM / 60.0;
+
+                double muzzle_velocity = (TopRPS * TopCircumference + BottomRPS * BottomCircumference) / 2.0; // SURFACE
+                                                                                                              // SPEED
+                double angle_rads = Math.toRadians(angle); // IN RADIANS
+
+                double TopRads = 0.104719755 * TopRPM;
+                double BottompRads = 0.104719755 * BottomRPM;
+
+                Vector started_velocity = new Vector(muzzle_velocity * Math.sin(angle_rads),
+                        muzzle_velocity * Math.cos(angle_rads), 0.0); // m/s
+                Vector started_rotational_velocity = new Vector(0.0, 0.0,
+                        (TopRads * TopmDiameter / 2 - BottompRads * BottommDiameter / 2)
+                                / (2 * projectile.get_radius())); // radians
+
+                projectile.set_position(new Vector(0.0, 0.1, 0.0));
+                projectile.set_started_velocity(started_velocity);
+                projectile.set_rotational_velocity(started_rotational_velocity);
+
+                ArrayList<State> states = projectile.simulate_ball(false);
+                Double result = target.check_distance(states);
+
+                if (result != 9999.0) {
+
+                    // System.out.println(TopRPM);
+                    // System.out.println(BottomRPM);
+                    // System.out.println(" ");
+
+                    // states_to_pos(states);
+
+                    // System.out.println("\n\n" + started_velocity);
+                    // System.out.println(started_rotational_velocity);
+                }
+                return result;
+            };
+        };
+
         if (max_hub_distance > 0)
             Current_Rotation_Ratio = Math.min(target.x_pos / max_hub_distance, 1.0) * -1.0;
 
@@ -302,6 +346,11 @@ public final class shooter_optimiztion {
 
                 BestTopRPM = (Current_Rotation_Ratio > 0.0 ? BestRPM * (Current_Rotation_Ratio - 1) : BestRPM);
                 BestBottomRPM = Current_Rotation_Ratio < 0.0 ? BestRPM * (1 - Current_Rotation_Ratio) : BestRPM;
+            } else {
+                // System.out.println(90 - Current_Angle + " " + Current_RPM);
+                // System.out.println(full_distance_check.run(Current_Angle, Current_RPM,
+                // Current_Rotation_Ratio));
+                // System.out.println();
             }
 
             Current_Angle += Angle_Increment;
