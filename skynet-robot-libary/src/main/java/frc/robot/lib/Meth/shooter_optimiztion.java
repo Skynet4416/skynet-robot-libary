@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.spi.CurrencyNameProvider;
 
 import com.github.iprodigy.physics.util.vector.Vector;
 
@@ -46,8 +47,16 @@ public final class shooter_optimiztion {
         Boolean run(Double angle, Double rpm, Double ratio);
     }
 
+    interface DoubleInterface {
+        Double run(Double angle, Double rpm, Double ratio);
+    }
+
     public static Double Lerp(Double A, Double B, Double Percent) {
         return A + (B - A) * Percent;
+    }
+
+    private static Double full_distance_check(Double current_Angle, Double current_RPM, Double current_Rotation_Ratio) {
+        return null;
     }
 
     public static Vector optimize(Ball projectile, Target target, // PHYSICALS
@@ -186,5 +195,122 @@ public final class shooter_optimiztion {
                 "\nANGLE " + (90.0 - BestAngle));
 
         return new Vector(BestTopRPM, BestBottomRPM, (90.0 - BestAngle));
+    }
+
+    public static Vector smart_optimize(Ball projectile, Target target, // PHYSICALS
+            double Max_Angle, double Min_Angle, double Max_RPM, double Min_RPM, Double max_hub_distance) { // CONSTRAINTS
+        Instant starts = Instant.now();
+
+        double TopinDiameter = 4;
+        double TopmDiameter = Units.inchesToMeters(TopinDiameter);
+        double TopCircumference = (TopmDiameter) * Math.PI;
+
+        double BottominDiameter = 4;
+        double BottommDiameter = Units.inchesToMeters(BottominDiameter);
+        double BottomCircumference = (BottommDiameter) * Math.PI;
+
+        ///////////////////////////
+        Integer Failures = 0;
+
+        Double Angle_Resolution = 1.0; // DEGREES
+        Double Rotation_Ratio_Resolution = 0.1; // PERCENTAGE
+        Double RPM_Resolution = 100.0; // RPM
+
+        Double Initial_Angle = Max_Angle;
+        Double Angle_Increment = -Angle_Resolution;
+        Double Current_Angle = Initial_Angle;
+
+        // Double Initial_Rotation_Ratio = 1.0;
+        Double Initial_Rotation_Ratio = 0.0;
+        Double Rotation_Ratio_Increment = -Rotation_Ratio_Resolution;
+        Double Current_Rotation_Ratio = Initial_Rotation_Ratio;
+
+        Double Initial_RPM = Max_RPM;
+        Double RPM_Increment = -RPM_Resolution;
+        Double Current_RPM = Initial_RPM;
+
+        BooleanInterface full_check = new BooleanInterface() {
+            public Boolean run(Double angle, Double rpm, Double ratio) {
+                double TopRPM = (ratio > 0.0 ? rpm * (ratio - 1) : rpm);
+                double TopRPS = TopRPM / 60.0;
+                double BottomRPM = ratio < 0.0 ? rpm * (1 - ratio) : rpm;
+                double BottomRPS = BottomRPM / 60.0;
+
+                double muzzle_velocity = (TopRPS * TopCircumference + BottomRPS * BottomCircumference) / 2.0; // SURFACE
+                                                                                                              // SPEED
+                double angle_rads = Math.toRadians(angle); // IN RADIANS
+
+                double TopRads = 0.104719755 * TopRPM;
+                double BottompRads = 0.104719755 * BottomRPM;
+
+                Vector started_velocity = new Vector(muzzle_velocity * Math.sin(angle_rads),
+                        muzzle_velocity * Math.cos(angle_rads), 0.0); // m/s
+                Vector started_rotational_velocity = new Vector(0.0, 0.0,
+                        (TopRads * TopmDiameter / 2 - BottompRads * BottommDiameter / 2)
+                                / (2 * projectile.get_radius())); // radians
+
+                projectile.set_position(new Vector(0.0, 0.1, 0.0));
+                projectile.set_started_velocity(started_velocity);
+                projectile.set_rotational_velocity(started_rotational_velocity);
+
+                ArrayList<State> states = projectile.simulate_ball(false);
+                Boolean result = target.check(states);
+
+                if (result) {
+
+                    // System.out.println(TopRPM);
+                    // System.out.println(BottomRPM);
+                    // System.out.println(" ");
+
+                    // states_to_pos(states);
+
+                    // System.out.println("\n\n" + started_velocity);
+                    // System.out.println(started_rotational_velocity);
+                }
+                return result;
+            };
+        };
+
+        if (max_hub_distance > 0)
+            Current_Rotation_Ratio = Math.min(target.x_pos / max_hub_distance, 1.0) * -1.0;
+
+        Integer results = 0;
+        Integer Attempts = 0;
+
+        Double BestTopRPM = -1.0;
+        Double BestBottomRPM = -1.0;
+        Double BestAngle = -1.0;
+        Double BestRPM = -1.0;
+
+        Current_Angle = Initial_Angle;
+
+        BestRPM = Current_RPM;
+        BestAngle = Current_Angle;
+
+        while (Current_Angle > Min_Angle) {
+            if (Current_RPM <= Min_RPM)
+                Current_RPM = BestRPM;
+
+            boolean fitsinhub = false;
+            while (!fitsinhub && Current_RPM > Min_RPM) {
+                Current_RPM += RPM_Increment;
+                fitsinhub = full_check.run(Current_Angle, Current_RPM, Current_Rotation_Ratio);
+            }
+            if (full_check.run(Current_Angle, Current_RPM, Current_Rotation_Ratio)) {
+                BestRPM = Current_RPM;
+                BestAngle = Current_Angle;
+
+                BestTopRPM = (Current_Rotation_Ratio > 0.0 ? BestRPM * (Current_Rotation_Ratio - 1) : BestRPM);
+                BestBottomRPM = Current_Rotation_Ratio < 0.0 ? BestRPM * (1 - Current_Rotation_Ratio) : BestRPM;
+            }
+
+            Current_Angle += Angle_Increment;
+        }
+
+        System.out.println("TRPM " + BestTopRPM + "\nBRPM " + BestBottomRPM +
+                "\nANGLE " + (90.0 - BestAngle));
+        System.out.println(Duration.between(starts, Instant.now()).getNano() / 1000000000.0);
+
+        return new Vector(BestTopRPM, BestBottomRPM, (BestAngle));
     }
 }

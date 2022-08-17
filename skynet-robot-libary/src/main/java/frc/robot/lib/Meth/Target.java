@@ -144,6 +144,7 @@ public class Target {
                 if (true) { // Z AXIS TBD
                     if (angle_deg >= minimum_entry_angle && angle_deg <= maximum_entry_angle) {
                         if (velocity >= minimum_entry_velocity && velocity <= maximum_entry_velocity) {
+                            System.out.println(angle_deg);
                             return true;
                         }
                     } else {
@@ -153,5 +154,38 @@ public class Target {
 
         }
         return false;
+    }
+
+    public Double check_distance(ArrayList<State> states) {
+        if (states.size() < 5)
+            return 9999.0;
+        Segment segment = new Segment(0.0, 0.0, 0.0, 0.0); // LX LY CX CY
+        double x_max = this.x_pos + (x_size / 2.0);
+        double x_min = this.x_pos - (x_size / 2.0);
+        double y_max = this.y_pos + (y_size / 2.0);
+        double y_min = this.y_pos - (y_size / 2.0);
+
+        for (int index = 0; index < states.size(); index++) {
+            segment.LX = segment.CX;
+            segment.LY = segment.CY;
+            segment.CX = states.get(index).position.getComponent(0);
+            segment.CY = states.get(index).position.getComponent(1);
+
+            // System.out.println(segment.CY);
+
+            double angle_deg = -(Math.toDegrees(Math.atan2(segment.CY - segment.LY, segment.CX - segment.LX)));
+
+            double velocity = new Vector(segment.CX - segment.LX, segment.CY - segment.LY).getMagnitude();
+
+            if (LineLine(new Vector(segment.LX, segment.LY), new Vector(segment.CX, segment.CY),
+                    new Vector(0.0, y_max), new Vector(200.0, y_max))) {
+                if (true) { // Z AXIS TBD
+                    return Math.abs(((segment.LX + segment.CX) / 2.0) - this.x_pos)
+                            * ((((segment.LX + segment.CX) / 2.0) > this.x_pos) ? 1.0 : -1.0);
+                }
+            }
+        }
+
+        return 9999.0;
     }
 }
