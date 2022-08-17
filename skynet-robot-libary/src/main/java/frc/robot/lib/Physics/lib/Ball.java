@@ -477,19 +477,49 @@ public class Ball extends PhysicalObjectBase {
         }
     }
 
+    public static void simulte_from_rpm_and_angle(Ball projectile, double TopRPM, double BottomRPM, double angle) {
+        double TopinDiameter = 4;
+        double TopmDiameter = Units.inchesToMeters(TopinDiameter);
+        double TopCircumference = (TopmDiameter) * Math.PI;
+
+        double BottominDiameter = 4;
+        double BottommDiameter = Units.inchesToMeters(BottominDiameter);
+        double BottomCircumference = (BottommDiameter) * Math.PI;
+        double TopRPS = TopRPM / 60.0;
+        double BottomRPS = BottomRPM / 60.0;
+        double muzzle_velocity = (TopRPS * TopCircumference + BottomRPS * BottomCircumference) / 2.0;
+        double angle_rads = Math.toRadians(angle); // IN RADIANS
+
+        double TopRads = 0.104719755 * TopRPM;
+        double BottompRads = 0.104719755 * BottomRPM;
+
+        Vector started_velocity = new Vector(muzzle_velocity * Math.sin(angle_rads),
+                muzzle_velocity * Math.cos(angle_rads), 0.0); // m/s
+        Vector started_rotational_velocity = new Vector(0.0, 0.0,
+                (TopRads * TopmDiameter / 2 - BottompRads * BottommDiameter / 2)
+                        / (2 * projectile.get_radius())); // radians
+
+        projectile.set_position(new Vector(0.0, 0.1, 0.0));
+        projectile.set_started_velocity(started_velocity);
+        projectile.set_rotational_velocity(started_rotational_velocity);
+        projectile.simulate_ball(true);
+
+    }
+
     public static void main(String[] args) {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
+        simulte_from_rpm_and_angle(ball, 1795.9917, 2238.6155, 90 - 67.30233);
+        // Target hub = new Target(new Vector(8.0, 2.7178, 0.0), new Vector(1.22 -
+        // (ball.get_radius() * 4.0), 0.05,
+        // 1.0), 45, 0, 999, -999);
+        // // Vector results = shooter_optimiztion.optimize(ball, hub,
+        // // OptimizationType.MINIMIZE, OptimizationType.MINIMIZE,
+        // // OptimizationType.MINIMIZE,
+        // // OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
+        // // 90.0, 45.0, 5000.0, 1500.0);
 
-        Target hub = new Target(new Vector(8.0, 2.7178, 0.0), new Vector(1.22 - (ball.get_radius() * 4.0), 0.05,
-                1.0), 45, 0, 999, -999);
-        // Vector results = shooter_optimiztion.optimize(ball, hub,
-        // OptimizationType.MINIMIZE, OptimizationType.MINIMIZE,
-        // OptimizationType.MINIMIZE,
-        // OptimizationType.IGNORE, OptimizationType.IGNORE, OptimizationType.IGNORE,
-        // 90.0, 45.0, 5000.0, 1500.0);
-
-        // ANGLE FROM Y AXIS ^
-        write_csv(ball, hub, 45.0, 0.0, 5000.0, 1500.0, true, 0.1);
+        // // ANGLE FROM Y AXIS ^
+        // write_csv(ball, hub, 45.0, 0.0, 5000.0, 1500.0, true, 0.1);
     }
 }
