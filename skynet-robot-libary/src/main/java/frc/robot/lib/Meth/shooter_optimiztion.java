@@ -376,11 +376,8 @@ public final class shooter_optimiztion {
         double BottomCircumference = (BottommDiameter) * Math.PI;
 
         ///////////////////////////
-        Integer Failures = 0;
-
         Double Angle_Resolution = 1.0; // DEGREES
-        Double Rotation_Ratio_Resolution = 0.1; // PERCENTAGE
-        Double RPM_Resolution = 100.0; // RPM
+        Double RPM_Resolution = 50.0; // RPM
 
         Double Initial_Angle = Max_Angle;
         Double Angle_Increment = -Angle_Resolution;
@@ -388,7 +385,6 @@ public final class shooter_optimiztion {
 
         // Double Initial_Rotation_Ratio = 1.0;
         Double Initial_Rotation_Ratio = 0.0;
-        Double Rotation_Ratio_Increment = -Rotation_Ratio_Resolution;
         Double Current_Rotation_Ratio = Initial_Rotation_Ratio;
 
         Double Initial_RPM = Max_RPM;
