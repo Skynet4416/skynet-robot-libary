@@ -525,11 +525,15 @@ public class Ball extends PhysicalObjectBase {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
-        Target hub = new Target(new Vector(8.0, 2.7178, 0.0), new Vector(1.22 - ball.get_target_threshold(), 0.05,
+        Target hub = new Target(new Vector(14.0, 2.7178, 0.0), new Vector(1.22 - ball.get_target_threshold(), 0.05,
                 1.0), 90, 45, 999, -999);
 
         // // ANGLE FROM Y AXIS ^
         Vector results = shooter_optimiztion.smart_optimize(ball, hub, 45.0, 0.0, 5000.0, 1500.0, 12.0);
+
+        simulte_from_rpm_and_angle(ball, results.getComponent(0), results.getComponent(1), results.getComponent(2));
+
+        results = shooter_optimiztion.binary_smart_optimize(ball, hub, 45.0, 0.0, 5000.0, 1500.0, 12.0);
 
         simulte_from_rpm_and_angle(ball, results.getComponent(0), results.getComponent(1), results.getComponent(2));
     }
