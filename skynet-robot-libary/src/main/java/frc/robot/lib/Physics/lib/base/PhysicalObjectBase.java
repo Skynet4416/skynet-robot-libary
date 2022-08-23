@@ -1,5 +1,9 @@
 package frc.robot.lib.Physics.lib.base;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.github.iprodigy.physics.util.abstraction.Scalar;
 import com.github.iprodigy.physics.util.vector.Vector;
 
@@ -47,7 +51,50 @@ public abstract class PhysicalObjectBase {
                         state.rotational_velocity.getMagnitude() * state.rotational_velocity.getMagnitude() * 0.5));
         state.angular_momentum = state.rotational_velocity.multiply(moment_of_inertia);
     }
-
+    protected List<Vector> deferantial_equation(Scalar time, State before_state)
+    {
+        // return state.velocity.add(state.acceleration.multiply(time));
+        List<Vector> output =  new ArrayList<Vector>();
+        output.add(before_state.velocity);
+        output.add(before_state.acceleration);
+        output.add(before_state.acceleration.subtract(before_before_state.acceleration).divide(time));
+        return output;
+    }
+    private List<Vector> multiplie_list(List<Vector> vector_list, double number)
+    {
+        List<Vector> return_list = new ArrayList<>(vector_list);
+        for (int i =0; i< vector_list.size();i++)
+        {
+            return_list.set(i,vector_list.get(i).multiply(number));
+        }
+        return return_list;
+    }
+    private List<Vector> add_list(List<Vector> v1, List<Vector> v2)
+    {
+        List<Vector> return_list = new ArrayList<>(v1);
+        for (int i =0; i< v1.size();i++)
+        {
+            return_list.set(i,v1.get(i).add(v2.get(i)));
+        }
+        return return_list;
+    }
+    protected void runge_kutta_aproxemation(State before_state)
+    {
+        List<Vector> state =  new ArrayList<Vector>();
+        state.add(before_state.position);
+        state.add(before_state.velocity);
+        state.add(before_state.acceleration);
+        List<Vector> a = deferantial_equation(()->0.0,before_state);
+        List<Vector> b = deferantial_equation(estemation_resulotion.multiply(0.5), before_state.add_vector(multiplie_list(a,estemation_resulotion.multiply(0.5).getMagnitude())));
+        List<Vector> c = deferantial_equation(estemation_resulotion.multiply(0.5), before_state.add_vector(multiplie_list(b,estemation_resulotion.multiply(0.5).getMagnitude())));
+        List<Vector> d = deferantial_equation(estemation_resulotion, before_state.add_vector(multiplie_list(c,estemation_resulotion.getMagnitude())));
+        // Vector position = before_state.position.add(a.add(b.multiply(2)).add(c.multiply(2)).add(d).multiply(estemation_resulotion.multiply((double)1/6)));
+        List<Vector> sum = multiplie_list(add_list(a, add_list(b, add_list(b, add_list(c, add_list(c, d))))), estemation_resulotion.multiply((double)1/6).getMagnitude());
+        System.out.println(Arrays.deepToString(sum.toArray()));
+        this.state.position = sum.get(0);
+        this.state.velocity = sum.get(1);
+        this.state.acceleration = sum.get(2);
+    }
     protected void recursive_update(State before_state, int turn, int iteration) {
         // System.out.println("Turn: " + turn);
         if (turn > state.kinematics_varuibales.size()) {
@@ -86,7 +133,7 @@ public abstract class PhysicalObjectBase {
         }
         recursive_update(before_state, turn + 1, iteration);
     }
-
+// ded
     protected void recursive_update1(State before_state, int turn, int iteration) {
         System.out.println("Turn: " + turn);
         if (turn > state.kinematics_varuibales.size()) {

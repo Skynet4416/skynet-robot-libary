@@ -221,10 +221,10 @@ public class Ball extends PhysicalObjectBase {
             states_array.add(new State(ball.state));
             i++;
         }
-        // System.out.print("\n\n\nx_array = ");
-        // System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
-        // System.out.print("\n\n\ny_array = ");
-        // System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
+        System.out.print("\n\n\nx_array = ");
+        System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+        System.out.print("\n\n\ny_array = ");
+        System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
 
     }
 
@@ -253,10 +253,10 @@ public class Ball extends PhysicalObjectBase {
             pos_array.get(1).add(ball.state.position.getComponent(1));
             i++;
         }
-        // System.out.print("\n\n\nx_array_drag_recursion = ");
-        // System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
-        // System.out.print("\n\n\ny_array_drag_recursion = ");
-        // System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
+        System.out.print("\n\n\nx_array_drag_recursion = ");
+        System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+        System.out.print("\n\n\ny_array_drag_recursion = ");
+        System.out.print(Arrays.deepToString(pos_array.get(1).toArray()));
     }
 
     public static void test_drag_no_recursion() {
@@ -524,14 +524,41 @@ public class Ball extends PhysicalObjectBase {
     public static void main(String[] args) {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
+        
 
-        Target hub = new Target(new Vector(4.0, 2.7178, 0.0), new Vector(1.22 - ball.get_target_threshold(), 0.05,
-                1.0), 90, 45, 999, -999);
+        // Target hub = new Target(new Vector(4.0, 2.7178, 0.0), new Vector(1.22 - ball.get_target_threshold(), 0.05,
+        //         1.0), 90, 45, 999, -999);
 
-        // // ANGLE FROM Y AXIS ^
+        // // // ANGLE FROM Y AXIS ^
 
-        Vector results = shooter_optimiztion.binary_smart_optimize(ball, hub, 45.0, 0.0, 5000.0, 1500.0, 12.0);
+        // Vector results = shooter_optimiztion.binary_smart_optimize(ball, hub, 45.0, 0.0, 5000.0, 1500.0, 12.0);
 
-        simulte_from_rpm_and_angle(ball, results.getComponent(0), results.getComponent(1), results.getComponent(2));
+        // simulte_from_rpm_and_angle(ball, results.getComponent(0), results.getComponent(1), results.getComponent(2));
+        test_drag_recursion();
+        ball.set_started_velocity(new Vector(19.9366967045, 19.9366967045, 0.0));
+        ball.before_before_state = new State();
+        ball.set_rotational_velocity(new Vector(0.0, 0.0, -58.422600157894736842105263157895));
+        ball.lift_coeficent = ball.radius.multiply(ball.state.rotational_velocity.getMagnitude())
+                .divide(ball.state.velocity.getMagnitude()); // if cd is close to 0.5 then cl = R*rotational_velocity/v
+                                                             // which/ is S
+        ball.set_position(new Vector(0.0, 0.0000001, 0.0));
+        ball.state.save_to_list();
+        ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
+        pos_array.add(0, new ArrayList<Double>());
+        pos_array.add(1, new ArrayList<Double>());
+        while(ball.state.position.getComponent(1)>0)
+        {
+            State before_state = new State(ball.state);
+            ball.calc_magnus_forces();
+            ball.calc();
+            ball.runge_kutta_aproxemation(before_state);
+            pos_array.get(0).add(ball.state.position.getComponent(0));
+            pos_array.get(1).add(ball.state.position.getComponent(1));
+            ball.before_before_state = new State(before_state);
+        }
+        System.out.print("\n\n\nx_array_runga_kutta = ");
+        System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+        System.out.print("\n\n\ny_array_runga_kutta  = ");
+        System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
     }
 }
