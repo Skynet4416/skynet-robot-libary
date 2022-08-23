@@ -94,8 +94,6 @@ public abstract class PhysicalObjectBase {
         List<Vector> sum = multiplie_list(add_list(a, add_list(b, add_list(b, add_list(c, add_list(c, d))))),
                 estemation_resulotion.multiply((double) 1 / 6).getMagnitude());
 
-        // System.out.println(sum);
-
         this.state.position = this.state.position.add(sum.get(0));
         this.state.velocity = this.state.velocity.add(sum.get(1));
         this.state.acceleration = this.state.acceleration.add(sum.get(2));
