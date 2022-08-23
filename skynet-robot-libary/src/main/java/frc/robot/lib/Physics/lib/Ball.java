@@ -188,6 +188,34 @@ public class Ball extends PhysicalObjectBase {
 
         return states_array;
     }
+    public ArrayList<State> simulate_ball_runge_kutta(Boolean print) {
+        ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
+        pos_array.add(0, new ArrayList<Double>());
+        pos_array.add(1, new ArrayList<Double>());
+
+        ArrayList<State> states_array = new ArrayList<State>();
+        states_array.add(new State(this.state));
+
+        while (this.state.position.getComponent(1) > 0) {
+            State before_state = new State(this.state);
+            
+            this.calc_magnus_forces();
+            this.calc();
+            this.runge_kutta_aproxemation(before_state);
+            pos_array.get(0).add(this.state.position.getComponent(0));
+            pos_array.get(1).add(this.state.position.getComponent(1));
+            this.before_before_state = new State(before_state);
+
+            states_array.add(new State(this.state));
+        }
+        if (print) {
+            System.out.print("\n\n\nx_array_runge_kutta = ");
+            System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+            System.out.print("\n\n\ny_array_runge_kutta  = ");
+            System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
+        }
+        return states_array;
+    }
 
     public static void test_magnus_recursion() {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
@@ -553,26 +581,7 @@ public class Ball extends PhysicalObjectBase {
         // .divide(ball.state.velocity.getMagnitude()); // if cd is close to 0.5 then cl
         // = R*rotational_velocity/v
         // which/ is S
-        ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
-        pos_array.add(0, new ArrayList<Double>());
-        pos_array.add(1, new ArrayList<Double>());
-
-        while (projectile.state.position.getComponent(1) > 0) {
-            State before_state = new State(projectile.state);
-            projectile.before_before_state = new State(before_state);
-            projectile.calc_magnus_forces();
-            projectile.calc();
-            projectile.runge_kutta_aproxemation(before_state);
-            pos_array.get(0).add(projectile.state.position.getComponent(0));
-            pos_array.get(1).add(projectile.state.position.getComponent(1));
-
-        }
-        if (true) {
-            System.out.print("\n\n\nx_array_runga_kutta = ");
-            System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
-            System.out.print("\n\n\ny_array_runga_kutta  = ");
-            System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
-        }
+        projectile.simulate_ball_runge_kutta(true);
 
     }
 
@@ -580,20 +589,26 @@ public class Ball extends PhysicalObjectBase {
         Ball ball = new Ball(0.26932047, 0.12065, 0.47, 0.1);
         ball.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
-        // Target hub = new Target(new Vector(4.0, 2.7178, 0.0), new Vector(1.22 -
-        // ball.get_target_threshold(), 0.05,
-        // 1.0), 90, 45, 999, -999);
+        Target hub = new Target(new Vector(4.0, 2.7178, 0.0), new Vector(1.22 -
+        ball.get_target_threshold(), 0.05,
+        1.0), 90, 45, 999, -999);
 
-        // // // ANGLE FROM Y AXIS ^
+        // // ANGLE FROM Y AXIS ^
 
-        // Vector results = shooter_optimiztion.binary_smart_optimize(ball, hub, 45.0,
-        // 0.0, 5000.0, 1500.0, 12.0);
+        Vector results = shooter_optimiztion.binary_smart_optimize(ball, hub, 45.0,
+        0.0, 5000.0, 1500.0, 12.0);
 
-        // simulte_from_rpm_and_angle(ball, results.getComponent(0),
-        // results.getComponent(1), results.getComponent(2));
+        simulte_from_rpm_and_angle(ball, results.getComponent(0),
+        results.getComponent(1), results.getComponent(2));
 
-        simulte_from_rpm_and_angle(ball, 3000, 3000, 45);
+        results = shooter_optimiztion.binary_smart_optimize_runge_kutta(ball, hub, 45.0,
+        0.0, 5000.0, 1500.0, 12.0);
 
-        simulte_from_rpm_and_angle_runge_kutta(ball, 3000, 3000, 45);
+        simulte_from_rpm_and_angle_runge_kutta(ball, results.getComponent(0),
+        results.getComponent(1), results.getComponent(2));
+
+        // simulte_from_rpm_and_angle(ball, 3000, 3000, 45);
+
+        // simulte_from_rpm_and_angle_runge_kutta(ball, 3000, 3000, 45);
     }
 }
