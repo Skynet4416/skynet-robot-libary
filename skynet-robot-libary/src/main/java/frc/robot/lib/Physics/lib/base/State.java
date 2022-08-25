@@ -99,6 +99,14 @@ public class State {
 
     }
 
+    public State add_vector(List<Vector> vector) {
+        State return_state = new State(this);
+        return_state.position.add(vector.get(0));
+        return_state.velocity.add(vector.get(1));
+        return_state.acceleration.add(vector.get(2));
+        return return_state;
+    }
+
     @Override
     public String toString() {
         return "position: " + position + "\nvelocity: " + velocity + "\nacceleration: " + acceleration + "\njerk: "
