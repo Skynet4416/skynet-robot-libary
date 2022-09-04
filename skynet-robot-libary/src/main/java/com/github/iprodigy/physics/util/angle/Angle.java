@@ -17,7 +17,11 @@ public class Angle implements Quantifiable<Double>, Comparable<Angle>, Computati
 	@Wither
 	private final double value;
 	private final AngleUnit unit;
-
+	public Angle(double value, AngleUnit unit)
+	{
+		this.value = value;
+		this.unit = unit;
+	}
 	public Angle convert(@NonNull final AngleUnit to) {
 		return new Angle(this.value * this.unit.convFactor(to), to);
 	}
@@ -33,14 +37,17 @@ public class Angle implements Quantifiable<Double>, Comparable<Angle>, Computati
 
 	@Override
 	public Angle add(final Angle other) {
-		return this.withValue(this.value + other.convert(this.unit).getValue());
+		return this.withValue(this.value + other.convert(this.unit).getValue(this.unit));
 	}
 
 	@Override // override to be more efficient by not creating unnecessary objects
 	public Angle subtract(final Angle other) {
-		return this.withValue(this.value - other.convert(this.unit).getValue());
+		return this.withValue(this.value - other.convert(this.unit).getValue(this.unit));
 	}
 
+	public Angle withValue(double d) {
+		return new Angle(d, this.unit);
+	}
 	@Override
 	public Angle multiply(final double scalar) {
 		return this.withValue(this.value * scalar);
@@ -66,8 +73,8 @@ public class Angle implements Quantifiable<Double>, Comparable<Angle>, Computati
 		return this.getValue(TURNS);
 	}
 
-	private double getValue(final AngleUnit au) {
-		return this.convert(au).getValue();
+	public double getValue(final AngleUnit au) {
+		return this.convert(au).value;
 	}
 
 	public double sin() {
@@ -96,7 +103,7 @@ public class Angle implements Quantifiable<Double>, Comparable<Angle>, Computati
 
 	@Override
 	public Double getMagnitude() {
-		return this.getValue();
+		return this.getValue(unit);
 	}
 
 	@Override

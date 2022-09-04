@@ -5,6 +5,8 @@ import com.github.iprodigy.physics.util.abstraction.Computational;
 import com.github.iprodigy.physics.util.abstraction.Quantifiable;
 import com.github.iprodigy.physics.util.angle.Angle;
 import com.github.iprodigy.physics.util.angle.AngleUnit;
+
+import edu.wpi.first.math.util.Units;
 import lombok.NonNull;
 import lombok.Value;
 
@@ -59,19 +61,19 @@ public class Vector implements Quantifiable<Double>, Computational<Vector>, Comp
 				break;
 
 			case II:
-				temp = this.angle.withValue(180 - this.angle.getValue());
+				temp = this.angle.withValue(180 - this.angle.getValue(AngleUnit.DEGREES));
 				x = -magnitude * temp.cos();
 				y = magnitude * temp.sin();
 				break;
 
 			case III:
-				temp = this.angle.withValue(this.angle.getValue() - 180);
+				temp = this.angle.withValue(this.angle.getValue(AngleUnit.DEGREES) - 180);
 				x = -magnitude * temp.cos();
 				y = -magnitude * temp.sin();
 				break;
 
 			case IV:
-				temp = this.angle.withValue(this.angle.getValue() - 360);
+				temp = this.angle.withValue(this.angle.getValue(AngleUnit.DEGREES) - 360);
 				x = magnitude * temp.cos();
 				y = magnitude * temp.sin();
 				break;
@@ -218,5 +220,9 @@ public class Vector implements Quantifiable<Double>, Computational<Vector>, Comp
 			hash = 31 * hash + Double.hashCode(MathUtil.round(d, 5)); // decimals = -log(epsilon) - 1
 		}
 		return hash;
+	}
+	public List<Double> getComponents()
+	{
+		return this.components;
 	}
 }

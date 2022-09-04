@@ -89,7 +89,7 @@ public class MathUtil {
 		return det;
 	}
 
-	private double[][] copy(final double[][] source, final int skipCol, final int skipRow) {
+	private static double[][] copy(final double[][] source, final int skipCol, final int skipRow) {
 		final int height = source.length, width = source[0].length;
 		final boolean rowSkipReq = skipRow >= 0 && skipRow < height, colSkipReq = skipCol >= 0 && skipCol < width;
 		final double[][] result = new double[height - (rowSkipReq ? 1 : 0)][width - (colSkipReq ? 1 : 0)];

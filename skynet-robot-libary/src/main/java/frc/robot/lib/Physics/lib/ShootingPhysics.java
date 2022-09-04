@@ -1,7 +1,6 @@
 package frc.robot.lib.Physics.lib;
 
 import frc.robot.lib.Physics.Constants;
-import com.github.iprodigy.physics.kinematics.*;
 
 public class ShootingPhysics {
     public static double get_starting_velocity_for_distance_and_angle(double angle, double direct_distance) {
