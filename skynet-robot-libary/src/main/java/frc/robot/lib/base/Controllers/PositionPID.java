@@ -6,5 +6,7 @@ public interface PositionPID {
     public PIDController get_pid_config();
 
     public void set_p();
+    public void set_d();
+    public void set_i();
 
 }

@@ -2,6 +2,7 @@ package frc.robot.lib.Flywheel.Subsystem;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.LinearQuadraticRegulator;
@@ -46,7 +47,7 @@ public class SingleFlywheel extends MySubsytemBase implements LQR, ProfiledPID, 
     }
 
     @Override
-    public Vector calculate(Vector state) {
+    public Nat calculate(Nat state) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -56,5 +57,6 @@ public class SingleFlywheel extends MySubsytemBase implements LQR, ProfiledPID, 
         // TODO Auto-generated method stub
         return null;
     }
+
 
 }

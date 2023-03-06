@@ -1,6 +1,7 @@
 package frc.robot.lib.base.Controllers;
 
 import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Num;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.LinearQuadraticRegulator;
@@ -14,7 +15,7 @@ public interface LQR {
 
     public void setR(double R);
 
-    public Vector calculate(Vector state);
+    public Nat calculate(Nat state);
 
     public LinearSystemLoop<N1, N1, N1> get_system_loop();
 

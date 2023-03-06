@@ -13,7 +13,7 @@ import static com.github.iprodigy.physics.util.angle.AngleUnit.*;
 @Value
 public class Angle implements Quantifiable<Double>, Comparable<Angle>, Computational<Angle> {
 	public static final Angle ZERO = new Angle(0.0, RADIANS), RIGHT = new Angle(90, DEGREES);
-
+	
 	@Wither
 	private final double value;
 	private final AngleUnit unit;
