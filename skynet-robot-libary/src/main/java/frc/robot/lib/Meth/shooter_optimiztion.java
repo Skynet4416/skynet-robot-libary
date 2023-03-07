@@ -12,6 +12,7 @@ import com.github.iprodigy.physics.util.vector.Vector;
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.lib.Physics.lib.Ball;
+import frc.robot.lib.Physics.lib.base.PhysicalObjectBase;
 import frc.robot.lib.Physics.lib.base.State;
 
 public final class shooter_optimiztion {
@@ -126,7 +127,7 @@ public final class shooter_optimiztion {
                 projectile.set_started_velocity(started_velocity);
                 projectile.set_rotational_velocity(started_rotational_velocity);
 
-                ArrayList<State> states = projectile.simulate_ball(false);
+                ArrayList<State> states = projectile.simulate_object(false);
 
                 Boolean result = target.check(states);
 
@@ -255,7 +256,7 @@ public final class shooter_optimiztion {
                 projectile.set_started_velocity(started_velocity);
                 projectile.set_rotational_velocity(started_rotational_velocity);
 
-                ArrayList<State> states = projectile.simulate_ball(false);
+                ArrayList<State> states = projectile.simulate_object(false);
                 Boolean result = target.check(states);
 
                 if (result) {
@@ -297,7 +298,7 @@ public final class shooter_optimiztion {
                 projectile.set_started_velocity(started_velocity);
                 projectile.set_rotational_velocity(started_rotational_velocity);
 
-                ArrayList<State> states = projectile.simulate_ball(false);
+                ArrayList<State> states = projectile.simulate_object(false);
                 Double result = target.check_distance(states);
 
                 if (result != 9999.0) {
@@ -363,7 +364,7 @@ public final class shooter_optimiztion {
         return new Vector(BestTopRPM, BestBottomRPM, (BestAngle));
     }
 
-    public static Vector binary_smart_optimize(Ball projectile, Target target, // PHYSICALS
+    public static Vector binary_smart_optimize(PhysicalObjectBase projectile, Target target, // PHYSICALS
             double Max_Angle, double Min_Angle, double Max_RPM, double Min_RPM, Double max_hub_distance) { // CONSTRAINTS
         Instant starts = Instant.now();
 
@@ -415,7 +416,7 @@ public final class shooter_optimiztion {
                 projectile.set_started_velocity(started_velocity);
                 projectile.set_rotational_velocity(started_rotational_velocity);
 
-                ArrayList<State> states = projectile.simulate_ball(false);
+                ArrayList<State> states = projectile.simulate_object(false);
                 Boolean result = target.check(states);
 
                 if (result) {
@@ -457,7 +458,7 @@ public final class shooter_optimiztion {
                 projectile.set_started_velocity(started_velocity);
                 projectile.set_rotational_velocity(started_rotational_velocity);
 
-                ArrayList<State> states = projectile.simulate_ball(false);
+                ArrayList<State> states = projectile.simulate_object(false);
                 Double result = target.check_distance(states);
 
                 if (result != 9999.0) {
@@ -531,7 +532,7 @@ public final class shooter_optimiztion {
         return new Vector(BestTopRPM, BestBottomRPM, (BestAngle));
     }
 
-    public static Vector binary_smart_optimize_runge_kutta(Ball projectile, Target target, // PHYSICALS
+    public static Vector binary_smart_optimize_runge_kutta(PhysicalObjectBase projectile, Target target, // PHYSICALS
             double Max_Angle, double Min_Angle, double Max_RPM, double Min_RPM, Double max_hub_distance) { // CONSTRAINTS
         Instant starts = Instant.now();
 
@@ -583,7 +584,7 @@ public final class shooter_optimiztion {
                 projectile.set_started_velocity(started_velocity);
                 projectile.set_rotational_velocity(started_rotational_velocity);
 
-                ArrayList<State> states = projectile.simulate_ball_runge_kutta(false);
+                ArrayList<State> states = projectile.simulate_object_runge_kutta(false);
                 Boolean result = target.check(states);
 
                 if (result) {
@@ -625,7 +626,7 @@ public final class shooter_optimiztion {
                 projectile.set_started_velocity(started_velocity);
                 projectile.set_rotational_velocity(started_rotational_velocity);
 
-                ArrayList<State> states = projectile.simulate_ball_runge_kutta(false);
+                ArrayList<State> states = projectile.simulate_object_runge_kutta(false);
                 Double result = target.check_distance(states);
 
                 if (result != 9999.0) {

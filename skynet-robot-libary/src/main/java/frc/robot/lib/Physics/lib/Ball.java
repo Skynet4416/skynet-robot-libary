@@ -53,7 +53,7 @@ public class Ball extends PhysicalObjectBase {
         Double tolerance = 0.1; // IN METERS
         return radius.getMagnitude() * 4 + tolerance;
     }
-
+    @Override
     public void set_position(Vector position) {
         state.position = position;
     }
@@ -153,8 +153,8 @@ public class Ball extends PhysicalObjectBase {
         // .multiply(Constants.density_of_air).multiply(cross_section_area_of_ball)
         // .multiply(Math.pow(state.velocity.getMagnitude(), 2)));
     }
-
-    public ArrayList<State> simulate_ball(Boolean print) {
+    @Override
+    public ArrayList<State> simulate_object(Boolean print) {
         this.before_before_state = new State(this.state);
         // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
         lift_coeficent = radius.multiply(state.rotational_velocity.getMagnitude())
@@ -188,7 +188,7 @@ public class Ball extends PhysicalObjectBase {
 
         return states_array;
     }
-    public ArrayList<State> simulate_ball_runge_kutta(Boolean print) {
+    public ArrayList<State> simulate_object_runge_kutta(boolean print) {
         ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
         pos_array.add(0, new ArrayList<Double>());
         pos_array.add(1, new ArrayList<Double>());
@@ -488,7 +488,7 @@ public class Ball extends PhysicalObjectBase {
                             projectile.set_started_velocity(started_velocity);
                             projectile.set_rotational_velocity(started_rotational_velocity);
 
-                            ArrayList<State> states = projectile.simulate_ball(false);
+                            ArrayList<State> states = projectile.simulate_object(false);
                             target.set_distance(distance);
                             Boolean result = target.check(states);
 
@@ -545,7 +545,7 @@ public class Ball extends PhysicalObjectBase {
         projectile.set_position(new Vector(0.0, 0.1, 0.0));
         projectile.set_started_velocity(started_velocity);
         projectile.set_rotational_velocity(started_rotational_velocity);
-        projectile.simulate_ball(true);
+        projectile.simulate_object(true);
 
     }
 
@@ -581,7 +581,7 @@ public class Ball extends PhysicalObjectBase {
         // .divide(ball.state.velocity.getMagnitude()); // if cd is close to 0.5 then cl
         // = R*rotational_velocity/v
         // which/ is S
-        projectile.simulate_ball_runge_kutta(true);
+        projectile.simulate_object_runge_kutta(true);
 
     }
 

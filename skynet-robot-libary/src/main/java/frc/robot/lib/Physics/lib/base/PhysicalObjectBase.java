@@ -36,6 +36,13 @@ public abstract class PhysicalObjectBase {
     public void add_torque(Vector force) {
 
     }
+    public abstract double get_radius();
+    public abstract void set_position(Vector vector);
+    public abstract void set_started_velocity(Vector vector);
+    public abstract void set_rotational_velocity(Vector vector);
+    public abstract ArrayList<State> simulate_object(Boolean print);
+
+
 
     public void calc() {
         state.acceleration = state.sigma_forces.divide(mass);
@@ -77,6 +84,7 @@ public abstract class PhysicalObjectBase {
         }
         return return_list;
     }
+    public abstract ArrayList<State> simulate_object_runge_kutta(boolean print);
 
     protected void runge_kutta_aproxemation(State before_state) {
         List<Vector> state = new ArrayList<Vector>();

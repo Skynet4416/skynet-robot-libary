@@ -3,11 +3,12 @@ package frc.robot.lib.Physics.lib;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 import com.github.iprodigy.physics.util.abstraction.Scalar;
 import com.github.iprodigy.physics.util.vector.Vector;
 
 import edu.wpi.first.math.util.Units;
+import frc.robot.lib.Meth.Target;
+import frc.robot.lib.Meth.shooter_optimiztion;
 import frc.robot.lib.Physics.Constants;
 import frc.robot.lib.Physics.lib.base.PhysicalObjectBase;
 import frc.robot.lib.Physics.lib.base.State;;
@@ -94,7 +95,7 @@ public class Cube extends PhysicalObjectBase {
 
     }
 
-    public ArrayList<State> simulate_ball_runge_kutta(Boolean print) {
+    public ArrayList<State> simulate_object_runge_kutta(boolean print) {
         ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
         pos_array.add(0, new ArrayList<Double>());
         pos_array.add(1, new ArrayList<Double>());
@@ -102,7 +103,6 @@ public class Cube extends PhysicalObjectBase {
         ArrayList<State> states_array = new ArrayList<State>();
         states_array.add(new State(this.state));
         this.before_before_state = new State(this.state);
-
 
         while (this.state.position.getComponent(1) > 0) {
             State before_state = new State(this.state);
@@ -160,7 +160,7 @@ public class Cube extends PhysicalObjectBase {
         // .divide(ball.state.velocity.getMagnitude()); // if cd is close to 0.5 then cl
         // = R*rotational_velocity/v
         // which/ is S
-        projectile.simulate_ball_runge_kutta(true);
+        projectile.simulate_object_runge_kutta(true);
 
     }
 
@@ -168,6 +168,86 @@ public class Cube extends PhysicalObjectBase {
         Cube cube = new Cube(0.071, 0.24, 0.24, 1.2, 0.2, 0.02);
         cube.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
 
-        simulte_from_rpm_and_angle_runge_kutta(cube, 2750, 2750, 45);
+        Target hub = new Target(new Vector(4.0, 2.7178, 0.0), new Vector(1.22 -
+                cube.get_target_threshold(), 0.05,
+                1.0), 90, 45, 999, -999);
+
+        // // ANGLE FROM Y AXIS ^
+
+        Vector results = shooter_optimiztion.binary_smart_optimize(cube, hub, 45.0,
+                0.0, 5000.0, 1500.0, 12.0);
+
+        simulte_from_rpm_and_angle(cube, results.getComponent(0),
+                results.getComponent(1), results.getComponent(2));
+
+        results = shooter_optimiztion.binary_smart_optimize_runge_kutta(cube, hub, 45.0,
+                0.0, 5000.0, 1500.0, 12.0);
+
+        simulte_from_rpm_and_angle_runge_kutta(cube, results.getComponent(0),
+                results.getComponent(1), results.getComponent(2));
+    }
+    public static void simulte_from_rpm_and_angle(Cube projectile, double TopRPM, double BottomRPM, double angle) {
+        double TopinDiameter = 4;
+        double TopmDiameter = Units.inchesToMeters(TopinDiameter);
+        double TopCircumference = (TopmDiameter) * Math.PI;
+
+        double BottominDiameter = 4;
+        double BottommDiameter = Units.inchesToMeters(BottominDiameter);
+        double BottomCircumference = (BottommDiameter) * Math.PI;
+        double TopRPS = TopRPM / 60.0;
+        double BottomRPS = BottomRPM / 60.0;
+        double muzzle_velocity = (TopRPS * TopCircumference + BottomRPS * BottomCircumference) / 2.0;
+        double angle_rads = Math.toRadians(angle); // IN RADIANS
+
+        double TopRads = 0.104719755 * TopRPM;
+        double BottompRads = 0.104719755 * BottomRPM;
+
+        Vector started_velocity = new Vector(muzzle_velocity * Math.sin(angle_rads),
+                muzzle_velocity * Math.cos(angle_rads), 0.0); // m/s
+        Vector started_rotational_velocity = new Vector(0.0, 0.0,
+                (TopRads * TopmDiameter / 2 - BottompRads * BottommDiameter / 2)
+                        / (2 * projectile.get_radius())); // radians
+
+        projectile.set_position(new Vector(0.0, 0.1, 0.0));
+        projectile.set_started_velocity(started_velocity);
+        projectile.set_rotational_velocity(started_rotational_velocity);
+        projectile.simulate_object(true);
+
+    }
+
+    @Override
+    public ArrayList<State> simulate_object(Boolean print) {
+        this.before_before_state = new State(this.state);
+        // System.out.println(ball.cross_section_area_of_ball.getMagnitude());
+        lift_coeficent = length.multiply(state.rotational_velocity.getMagnitude())
+                .divide(state.velocity.getMagnitude());
+        ArrayList<ArrayList<Double>> pos_array = new ArrayList<ArrayList<Double>>();
+        pos_array.add(0, new ArrayList<Double>());
+        pos_array.add(1, new ArrayList<Double>());
+        pos_array.add(2, new ArrayList<Double>());
+        pos_array.add(3, new ArrayList<Double>());
+        ArrayList<State> states_array = new ArrayList<State>();
+        states_array.add(new State(this.state));
+        int i = 0;
+        while (this.state.position.getComponent(1) > 0) {
+            // System.out.println(i + " iteration");
+            this.calc_magnus_forces();
+            this.update_position(i);
+            pos_array.get(0).add(this.state.position.getComponent(0)); // x
+            pos_array.get(1).add(this.state.position.getComponent(1)); // y
+            pos_array.get(2).add(this.state.position.getComponent(2)); // z
+            pos_array.get(3).add(this.state.velocity.getDegree()); // alpha
+            states_array.add(new State(this.state));
+            i++;
+        }
+
+        if (print) {
+            System.out.print("\n\n\nx_array = ");
+            System.out.print(Arrays.deepToString(pos_array.get(0).toArray()));
+            System.out.print("\n\n\ny_array = ");
+            System.out.println(Arrays.deepToString(pos_array.get(1).toArray()));
+        }
+
+        return states_array;
     }
 }
