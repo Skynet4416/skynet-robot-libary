@@ -164,28 +164,6 @@ public class Cube extends PhysicalObjectBase {
 
     }
 
-    public static void main(String[] args) {
-        Cube cube = new Cube(0.071, 0.24, 0.24, 1.2, 0.2, 0.02);
-        cube.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
-
-        Target hub = new Target(new Vector(4.0, 2.7178, 0.0), new Vector(1.22 -
-                cube.get_target_threshold(), 0.05,
-                1.0), 90, 45, 999, -999);
-
-        // // ANGLE FROM Y AXIS ^
-
-        Vector results = shooter_optimiztion.binary_smart_optimize(cube, hub, 45.0,
-                0.0, 5000.0, 1500.0, 12.0);
-
-        simulte_from_rpm_and_angle(cube, results.getComponent(0),
-                results.getComponent(1), results.getComponent(2));
-
-        results = shooter_optimiztion.binary_smart_optimize_runge_kutta(cube, hub, 45.0,
-                0.0, 5000.0, 1500.0, 12.0);
-
-        simulte_from_rpm_and_angle_runge_kutta(cube, results.getComponent(0),
-                results.getComponent(1), results.getComponent(2));
-    }
     public static void simulte_from_rpm_and_angle(Cube projectile, double TopRPM, double BottomRPM, double angle) {
         double TopinDiameter = 4;
         double TopmDiameter = Units.inchesToMeters(TopinDiameter);
@@ -250,4 +228,28 @@ public class Cube extends PhysicalObjectBase {
 
         return states_array;
     }
+
+    public static void main(String[] args) {
+        Cube cube = new Cube(0.071, 0.24, 0.24, 1.2, 0.2, 0.02);
+        cube.state.kinematics_varuibales.add(new Vector(0.0, 0.0, 0.0));
+
+        Target hub = new Target(new Vector(1.0, 0.826, 0.0), new Vector(1.22 -
+                cube.get_target_threshold(), 0.05,
+                1.0), 90, 45, 999, -999);
+
+        // // ANGLE FROM Y AXIS ^
+        Vector results;
+        // Vector results = shooter_optimiztion.binary_smart_optimize(cube, hub, 45.0,
+        // 0.0, 5000.0, 1500.0, 12.0);
+
+        // simulte_from_rpm_and_angle(cube, results.getComponent(0),
+        // results.getComponent(1), results.getComponent(2));
+
+        results = shooter_optimiztion.binary_smart_optimize_runge_kutta(cube, hub, 45.0,
+                0.0, 5000.0, 1500.0, 12.0);
+
+        simulte_from_rpm_and_angle_runge_kutta(cube, results.getComponent(0),
+                results.getComponent(1), results.getComponent(2));
+    }
+
 }
