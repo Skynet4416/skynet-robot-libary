@@ -19,10 +19,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory.State;
+import frc.robot.lib.PathFinder.AABB;
+import frc.robot.lib.PathFinder.FIeldConstatnts.FieldConstants;
 
 public class PathFinder {
 
     public static void main(String[] args) throws IOException {
+        // FIELD SETUP
         Node p1 = new Node(2, 0.5);
         Node p2 = new Node(2, 2.5);
         Node p3 = new Node(2, 5);
@@ -39,18 +42,22 @@ public class PathFinder {
         p6.Neighbors = new ArrayList<Node>(Arrays.asList(p2, p5));
         p7.Neighbors = new ArrayList<Node>(Arrays.asList(p4, p5));
 
+        AABB collisionTest = new AABB(FieldConstants.Community.chargingStationCorners[1],
+                FieldConstants.Community.chargingStationCorners[3]);
+
         Graph graph = new Graph(new ArrayList<Node>(Arrays.asList(p1, p2, p3, p4, p5, p6, p7)));
-        long startTime = System.nanoTime();
-        var path = graph.aStar(p3, p6);
 
+        // PATH GENERATION
+        Node robot = new Node(4, 4.25);
+        Node target = p6;
+        robot.Neighbors = new ArrayList<Node>(
+                Arrays.asList(graph.findStart(robot, Arrays.asList(collisionTest), target)));
+        var path = graph.aStar(robot, target);
         path = smooth(equalSpacingPath(path));
-        var x = PathPlanner.generatePath(new PathConstraints(4, 3), convertNodeToPathPoints(path));
 
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime);
-        System.out.println(duration / 1000000);
-        System.out.println(x.getEndState().timeSeconds);
-        printJulia(x);
+        var x = PathPlanner.generatePath(new PathConstraints(4, 3),
+                convertNodeToPathPoints(path));
+
     }
 
     private static void saveJson(PathPlannerTrajectory x) throws IOException {
@@ -184,7 +191,7 @@ public class PathFinder {
         for (Node y : x) {
             your_mama += y.x + "," + y.y + "\n";
         }
-        try (FileWriter fw = new FileWriter("src\\main\\java\\frc\\robot\\lib\\PathFinder\\path.txt")) {
+        try (FileWriter fw = new FileWriter("src\\main\\java\\frc\\robot\\lib\\PathFinder\\desmospath.txt")) {
             fw.write(your_mama);
             fw.close();
         } catch (IOException e) {

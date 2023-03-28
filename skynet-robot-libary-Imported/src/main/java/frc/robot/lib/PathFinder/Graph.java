@@ -1,7 +1,12 @@
 package frc.robot.lib.PathFinder;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Translation2d;
+
 import java.util.Arrays;
+import frc.robot.lib.PathFinder.AABB;
 
 public class Graph {
     ArrayList<Node> Nodes;
@@ -14,6 +19,29 @@ public class Graph {
 
     private double Distance2D(Node A, Node B) {
         return Math.sqrt(Math.pow(A.x - B.x, 2) + Math.pow(A.y - B.y, 2));
+    }
+
+    public Node findStart(Node RobotNode, List<AABB> CollisionBoxes, Node End) {
+        List<Node> options = new ArrayList<Node>();
+        for (Node node : Nodes) {
+            for (AABB collision : CollisionBoxes) {
+                if (!collision.check_line(new Translation2d(RobotNode.x, RobotNode.y),
+                        new Translation2d(node.x, node.y)))
+                    options.add(node);
+            }
+        }
+
+        double minDist = -1;
+        Node minNode = options.get(0);
+        for (Node node : options) {
+            double currDist = Distance2D(node, End);
+            if (currDist < minDist || minDist == -1) {
+                minDist = currDist;
+                minNode = node;
+            }
+        }
+
+        return minNode;
     }
 
     public ArrayList<Node> aStar(Node Start, Node End) {
