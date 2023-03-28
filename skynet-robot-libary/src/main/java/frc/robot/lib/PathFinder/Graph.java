@@ -17,6 +17,7 @@ public class Graph {
     }
 
     public ArrayList<Node> aStar(Node Start, Node End) {
+
         ArrayList<Node> found_path = new ArrayList<Node>();
         ArrayList<Node> reverse_path = new ArrayList<Node>();
         reverse_path.add(End);
@@ -100,7 +101,14 @@ public class Graph {
         p7.Neighbors = new ArrayList<Node>(Arrays.asList(p4, p5));
 
         Graph graph = new Graph(new ArrayList<Node>(Arrays.asList(p1, p2, p3, p4, p5, p6, p7)));
+        long startTime = System.nanoTime();
         var path = graph.aStar(p3, p6);
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+
         System.out.println(path);
+        System.out.println(path.get(path.size() - 1).g);
+
     }
 }

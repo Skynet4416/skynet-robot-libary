@@ -1,0 +1,68 @@
+0 iteration
+Vector(components=[
+    -30.403992530445816,
+    -18.671915556268075,
+    0.0
+], magnitude=35.67973083323094, angle=Angle(value=148.44478704634184, unit=DEGREES), isUnit=false, name=null)
+Turn: 1
+first value
+Vector(components=[
+    -152.01996265222908,
+    -93.35957778134038,
+    0.0
+], magnitude=178.3986541661547, angle=Angle(value=148.44478704634184, unit=DEGREES), isUnit=false, name=null)
+Turn: 2
+trying to set acceleration
+Turn: 3
+current vector place 1
+loop
+adding vector place2
+10.000000000006398 += 0.0 * 0.2^1/1
+adding vector place3
+10.000000000006398 += 0.0 * 0.2^2/2
+end loop
+Turn: 4
+current vector place 0
+loop
+adding vector place1
+0.1 += 10.000000000006398 * 0.2^1/1
+adding vector place2
+2.071917641336141 += 0.0 * 0.2^2/2
+adding vector place3
+2.071917641336141 += 0.0 * 0.2^3/6
+end loop
+Turn: 5
+1 iteration
+Vector(components=[
+    -45.60598879566872,
+    -28.007873334402113,
+    0.0
+], magnitude=53.51959624984641, angle=Angle(value=148.44478704634184, unit=DEGREES), isUnit=false, name=null)
+Turn: 1
+first value
+Vector(components=[
+    -76.00998132611453,
+    -46.67978889067019,
+    0.0
+], magnitude=89.19932708307735, angle=Angle(value=148.44478704634184, unit=DEGREES), isUnit=false, name=null)
+Turn: 2
+trying to set acceleration
+Turn: 3
+current vector place 1
+loop
+adding vector place2
+10.000000000006398 += 35.67973083323094 * 0.2^1/1
+adding vector place3
+3.4805312941128848 += 178.3986541661547 * 0.2^2/2
+end loop
+Turn: 4
+current vector place 0
+loop
+adding vector place1
+2.071917641336141 += 10.000000000006398 * 0.2^1/1
+adding vector place2
+4.071324775177003 += 35.67973083323094 * 0.2^2/2
+adding vector place3
+3.384953449534229 += 178.3986541661547 * 0.2^3/6
+end loop
+Turn: 5
